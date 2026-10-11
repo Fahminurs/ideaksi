@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { login, type Role } from "@/lib/session";
 import PasswordInput from "../PasswordInput";
@@ -19,18 +19,23 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isNavigating, startNavigation] = useTransition();
+  const isLoading = isSubmitting || isNavigating;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSubmitting(true);
     const err = await login(role, username, password);
-    if (err) {
-      setError(err);
-      setIsLoading(false);
-      return;
-    }
-    router.replace(role === "guru" ? "/guru/beranda" : "/beranda");
+    setIsSubmitting(false);
+    if (err) return setError(err);
+    // Next menyimpan state halaman ini selama pengguna di dalam aplikasi; tanpa reset, setelah keluar
+    // form masih terisi dan tombol masih berputar. Update di dalam transisi ikut selesai bersama navigasi.
+    startNavigation(() => {
+      router.replace(role === "guru" ? "/guru/beranda" : "/beranda");
+      setUsername("");
+      setPassword("");
+    });
   };
 
   const clearError = () => error && setError("");

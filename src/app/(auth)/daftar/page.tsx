@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { registerSiswa } from "@/lib/session";
 import PasswordInput from "../PasswordInput";
@@ -14,18 +14,23 @@ export default function RegisterPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isNavigating, startNavigation] = useTransition();
+  const isLoading = isSubmitting || isNavigating;
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSubmitting(true);
     const err = await registerSiswa(name, username, password);
-    if (err) {
-      setError(err);
-      setIsLoading(false);
-      return;
-    }
-    router.replace("/beranda");
+    setIsSubmitting(false);
+    if (err) return setError(err);
+    // reset bersama navigasi, supaya form tidak tersisa saat halaman ini dibuka lagi setelah keluar
+    startNavigation(() => {
+      router.replace("/beranda");
+      setName("");
+      setUsername("");
+      setPassword("");
+    });
   };
 
   const clearError = () => error && setError("");
