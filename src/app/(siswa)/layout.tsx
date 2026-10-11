@@ -9,7 +9,7 @@ import {
   House, PenLine, BookOpen, FileText, CircleHelp, LogOut,
   PanelLeftClose, PanelLeftOpen, Sparkles,
 } from "lucide-react";
-import { logout, rememberPath } from "@/lib/session";
+import { endServerSession, logout, rememberPath } from "@/lib/session";
 import { apiEnabled } from "@/lib/api";
 import { pullAll } from "@/lib/sync";
 import { useUser } from "@/lib/useUser";
@@ -132,7 +132,8 @@ export default function SiswaLayout({ children }: { children: React.ReactNode })
   const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
-    if (user === null || user?.role === "guru") router.replace("/masuk");
+    if (user === null) endServerSession().finally(() => router.replace("/masuk"));
+    else if (user?.role === "guru") router.replace("/guru/beranda");
   }, [user, router]);
 
   // Mode API: segarkan cache dari server sekali tiap aplikasi dibuka (mis. setelah menulis di perangkat lain)

@@ -33,7 +33,7 @@ export default function DevLogin() {
   const go = async (role: Role) => {
     const err = await devLogin(role);
     if (err) return alert(err);
-    router.push(role === "guru" ? "/guru/beranda" : "/beranda");
+    router.replace(role === "guru" ? "/guru/beranda" : "/beranda");
   };
 
   const onDown = (e: React.PointerEvent) => {

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { LogOut } from "lucide-react";
 import { useUser } from "@/lib/useUser";
-import { logout } from "@/lib/session";
+import { endServerSession, logout } from "@/lib/session";
 import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./guru.module.css";
 
@@ -15,7 +15,7 @@ export default function GuruLayout({ children }: { children: React.ReactNode }) 
   const router = useRouter();
 
   useEffect(() => {
-    if (user === null) router.replace("/masuk");
+    if (user === null) endServerSession().finally(() => router.replace("/masuk"));
     else if (user?.role === "siswa") router.replace("/beranda");
   }, [user, router]);
 

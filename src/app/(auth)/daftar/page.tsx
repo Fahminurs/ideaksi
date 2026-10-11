@@ -25,7 +25,7 @@ export default function RegisterPage() {
       setIsLoading(false);
       return;
     }
-    router.push("/beranda");
+    router.replace("/beranda");
   };
 
   const clearError = () => error && setError("");

@@ -1,5 +1,5 @@
 // Akun & sesi. Mode API: backend Apps Script + Supabase. Mode lokal (tanpa NEXT_PUBLIC_API_URL): akun demo di localStorage.
-import { apiEnabled, call, fire, setOnExpired, setToken } from "./api";
+import { apiEnabled, call, setOnExpired, setToken } from "./api";
 import { clearLocalData, pullAll } from "./sync";
 
 export type Role = "siswa" | "guru";
@@ -121,14 +121,29 @@ export async function updateProfile(current: User, name: string, username: strin
   return null;
 }
 
-export function logout() {
+export async function logout() {
   if (apiEnabled) {
-    fire("auth.logout");
+    // tunggu server menghapus sesi + cookie penjaga rute, supaya proxy tidak mengembalikan ke beranda
+    await call("auth.logout").catch(() => {});
     setToken(null);
     clearLocalData(); // data siswa lain tidak boleh tertinggal di perangkat bersama
   }
   localStorage.removeItem(USER_KEY);
   window.dispatchEvent(new Event(SESSION_EVENT));
+}
+
+// Mode API: halaman /masuk hanya bisa terbuka kalau cookie server tidak sah (lihat proxy.ts),
+// jadi sesi yang masih tersimpan di browser sudah basi -> buang tanpa mengalihkan halaman.
+export function forgetLocalSession() {
+  setToken(null);
+  clearLocalData();
+  localStorage.removeItem(USER_KEY);
+  window.dispatchEvent(new Event(SESSION_EVENT));
+}
+
+// Sesi di browser hilang (mis. data situs dihapus) tapi cookie server masih ada: hapus cookie-nya.
+export async function endServerSession() {
+  if (apiEnabled) await call("auth.logout").catch(() => {});
 }
 
 // Token ditolak server (kedaluwarsa) => keluar, layout akan mengarahkan ke /masuk.

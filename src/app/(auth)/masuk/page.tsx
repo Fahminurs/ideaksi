@@ -30,7 +30,7 @@ export default function LoginPage() {
       setIsLoading(false);
       return;
     }
-    router.push(role === "guru" ? "/guru/beranda" : "/beranda");
+    router.replace(role === "guru" ? "/guru/beranda" : "/beranda");
   };
 
   const clearError = () => error && setError("");
