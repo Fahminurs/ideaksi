@@ -13,7 +13,8 @@ const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 const titleOf = (a: Article) => a.revision?.title || a.draft?.title || a.topic?.text || "Artikel tanpa judul";
 
-// Tombol hapus: muncul saat kartu di-hover (selalu tampil di layar sentuh).
+// Tombol hapus: tab merah di pojok kiri atas kartu, muncul saat kartu di-hover (selalu tampil di layar sentuh).
+// Posisinya melayang (absolute), jadi tombol lain tidak bergeser.
 // Klik pertama membuka konfirmasi kecil "Hapus?"; tutup otomatis setelah 4 detik.
 function DeleteButton({ a }: { a: Article }) {
   const [asking, setAsking] = useState(false);
@@ -39,7 +40,7 @@ function DeleteButton({ a }: { a: Article }) {
         </div>
       ) : (
         <button type="button" className={styles.deleteBtn} onClick={() => setAsking(true)} aria-label={`Hapus artikel ${title}`} title="Hapus">
-          <Trash2 size={19} aria-hidden />
+          <Trash2 size={16} aria-hidden /> Hapus
         </button>
       )}
     </div>
@@ -97,6 +98,7 @@ export default function MenulisPage() {
             const percent = Math.round(((a.stage - 1) / STAGES.length) * 100);
             return (
               <li key={a.id} className={styles.draft}>
+                <DeleteButton a={a} />
                 <span className={styles.cardNo}>
                   <b>{i + 1}</b> Dikerjakan
                 </span>
@@ -122,12 +124,9 @@ export default function MenulisPage() {
                     </p>
                     <p className={styles.meta}>Diedit {formatDate(a.updated)}</p>
                   </div>
-                  <div className={styles.cardActions}>
-                    <Link href={`/menulis/${a.id}/tahap/${a.stage}`} className={styles.resume}>
-                      Lanjutkan
-                    </Link>
-                    <DeleteButton a={a} />
-                  </div>
+                  <Link href={`/menulis/${a.id}/tahap/${a.stage}`} className={styles.resume}>
+                    Lanjutkan
+                  </Link>
                 </div>
 
                 <ol className={styles.path} aria-label="Jalur tahap menulis">
@@ -160,6 +159,7 @@ export default function MenulisPage() {
         <ul className={styles.list}>
           {done.map((a, i) => (
             <li key={a.id} className={styles.done}>
+              <DeleteButton a={a} />
               <span className={styles.cardNo}>
                 <b>{drafts.length + i + 1}</b> Selesai
               </span>
@@ -175,7 +175,6 @@ export default function MenulisPage() {
                 <Link href={`/menulis/${a.id}/tahap/6`} className={styles.pdfBtn}>
                   <FileDown size={18} aria-hidden /> Unduh PDF
                 </Link>
-                <DeleteButton a={a} />
               </div>
             </li>
           ))}
