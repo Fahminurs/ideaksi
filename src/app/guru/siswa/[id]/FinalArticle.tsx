@@ -2,16 +2,13 @@
 
 import { useState } from "react";
 import { Download, Eye, EyeOff } from "lucide-react";
+import { downloadArticlePdf } from "@/lib/pdf";
 import styles from "../../dashboard.module.css";
 
-// Artikel final siswa: tampil/sembunyi + cetak (Simpan sebagai PDF).
-export default function FinalArticle({ title, author, body }: { title: string; author: string; body: string }) {
+// Artikel final siswa: tampil/sembunyi + unduh PDF langsung.
+export default function FinalArticle({ title, author, body, date }: { title: string; author: string; body: string; date: string }) {
   const [open, setOpen] = useState(false);
-
-  const print = () => {
-    setOpen(true);
-    requestAnimationFrame(() => window.print()); // tunggu kertas tampil dulu
-  };
+  const download = () => downloadArticlePdf({ title, author, body, date });
 
   return (
     <>
@@ -20,7 +17,7 @@ export default function FinalArticle({ title, author, body }: { title: string; a
           {open ? <EyeOff size={18} aria-hidden /> : <Eye size={18} aria-hidden />}
           {open ? "Tutup artikel" : "Lihat artikel final"}
         </button>
-        <button type="button" className={styles.solidBtn} onClick={print}>
+        <button type="button" className={styles.solidBtn} onClick={download}>
           <Download size={18} aria-hidden /> Unduh PDF
         </button>
       </div>

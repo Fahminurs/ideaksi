@@ -9,6 +9,7 @@ import { useUser } from "@/lib/useUser";
 import { stageVars } from "@/lib/stages";
 import { FieldError, goTo } from "./FieldError";
 import AutoText from "./AutoText";
+import { downloadArticlePdf } from "@/lib/pdf";
 import styles from "./tahap.module.css";
 
 const CHECKS = [
@@ -61,7 +62,12 @@ export default function Step6Revise({ article }: { article: Article }) {
 
   const download = () => {
     save();
-    window.print(); // ponytail: PDF lewat dialog cetak browser ("Simpan sebagai PDF"); pakai pustaka PDF kalau butuh unduh langsung
+    downloadArticlePdf({
+      title: title || "Tanpa judul",
+      author: user?.name ?? "Siswa",
+      date: formatDate(article.doneAt ?? article.updated),
+      body,
+    });
   };
 
   if (!article.draft) {

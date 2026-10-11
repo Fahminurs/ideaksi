@@ -106,7 +106,7 @@ export default function StudentDetail({ id }: { id: string }) {
             </ol>
             {status === "selesai" &&
               (s.article.body ? (
-                <FinalArticle title={s.article.title} author={s.name} body={s.article.body} />
+                <FinalArticle title={s.article.title} author={s.name} body={s.article.body} date={date(s.updated)} />
               ) : (
                 <p className={styles.empty}>Teks artikel final belum tersedia.</p>
               ))}

@@ -8,6 +8,7 @@ import { STAGES } from "@/lib/stages";
 import { createArticle, deleteArticle, useArticles, type Article } from "@/lib/articles";
 import { countWords } from "@/lib/ai";
 import { useUser } from "@/lib/useUser";
+import { downloadArticlePdf } from "@/lib/pdf";
 import styles from "./menulis.module.css";
 
 const formatDate = (iso: string) =>
@@ -48,39 +49,10 @@ function DeleteButton({ a }: { a: Article }) {
   );
 }
 
-const paragraphs = (s: string) => s.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
-
-// Artikel versi dokumen yang hanya tampil saat dicetak (Unduh PDF tanpa pindah halaman).
-function PrintArticle({ a, author }: { a: Article; author: string }) {
-  const body = a.revision?.body ?? a.draft?.body ?? "";
-  return (
-    <article className="print-only" data-print-area>
-      <header>
-        <h2>{titleOf(a)}</h2>
-        <p>Oleh {author} · Kelas VIII · {formatDate(a.doneAt ?? a.updated)}</p>
-      </header>
-      {paragraphs(body).map((p, i) => <p key={i}>{p}</p>)}
-    </article>
-  );
-}
-
 export default function MenulisPage() {
   const articles = useArticles();
   const router = useRouter();
   const user = useUser();
-  const [printing, setPrinting] = useState<Article | null>(null);
-
-  // setelah artikel cetak dirender, buka dialog cetak ("Simpan sebagai PDF"), lalu bersihkan
-  useEffect(() => {
-    if (!printing) return;
-    const done = () => setPrinting(null);
-    window.addEventListener("afterprint", done, { once: true });
-    const t = setTimeout(() => window.print(), 50);
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener("afterprint", done);
-    };
-  }, [printing]);
   const [filter, setFilter] = useState<"semua" | "proses" | "selesai">("semua");
   if (!articles) return null; // menunggu localStorage
   const drafts = articles.filter((a) => !a.doneAt);
@@ -203,7 +175,14 @@ export default function MenulisPage() {
               </div>
               <div className={styles.actions}>
                 <Link href={`/menulis/${a.id}/tahap/6`} className={styles.ghostBtn}>Lihat</Link>
-                <button type="button" className={styles.pdfBtn} onClick={() => setPrinting(a)}>
+                <button type="button" className={styles.pdfBtn} onClick={() =>
+                  downloadArticlePdf({
+                    title: titleOf(a),
+                    author: user?.name ?? "Siswa",
+                    date: formatDate(a.doneAt ?? a.updated),
+                    body: a.revision?.body ?? a.draft?.body ?? "",
+                  })
+                }>
                   <FileDown size={18} aria-hidden /> Unduh PDF
                 </button>
               </div>
@@ -214,7 +193,6 @@ export default function MenulisPage() {
       )}
       {/* elemen nyata (bukan :last-child) supaya tetap benar saat pindah halaman tanpa refresh */}
       <div className={styles.fabSpace} aria-hidden />
-      {printing && <PrintArticle a={printing} author={user?.name ?? "Siswa"} />}
     </>
   );
 }
