@@ -1273,6 +1273,42 @@ legend.cardTitle + * {
   transform: none;
 }
 
+/* ===== Pesan error di bawah isian ===== */
+.fieldError {
+  margin-top: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--danger-50);
+  color: var(--danger-600);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.4;
+  animation: shake 0.35s ease;
+}
+
+.fieldError svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.factCard[data-error] {
+  border-color: var(--danger-600);
+  border-left-color: var(--danger-600);
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(4px);
+  }
+}
+
 /* ===== Panduan "cara mengisi" tiap tahap ===== */
 .guide {
   margin-top: 4px;

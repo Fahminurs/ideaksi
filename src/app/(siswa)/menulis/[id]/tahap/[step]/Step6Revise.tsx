@@ -7,6 +7,7 @@ import { saveArticle, type Article } from "@/lib/articles";
 import { countWords, partOf, readMinutes } from "@/lib/ai";
 import { useUser } from "@/lib/useUser";
 import { stageVars } from "@/lib/stages";
+import { FieldError, goTo } from "./FieldError";
 import styles from "./tahap.module.css";
 
 const CHECKS = [
@@ -43,12 +44,16 @@ export default function Step6Revise({ article }: { article: Article }) {
 
   const toggle = (i: number) => {
     const next = checks.map((c, k) => (k === i ? !c : c));
+    setNote("");
     setChecks(next);
     saveArticle({ ...article, revision: { ...saved, checks: next } });
   };
 
   const finish = () => {
-    if (!allChecked) return setNote("Centang semua daftar cek revisi dulu, ya.");
+    if (!allChecked) {
+      setNote("Centang semua daftar cek revisi dulu sebelum menandai selesai.");
+      return goTo("checklist");
+    }
     save({ doneAt: new Date().toISOString() });
     setNote("");
   };
@@ -116,7 +121,7 @@ export default function Step6Revise({ article }: { article: Article }) {
         </button>
       </div>
 
-      <fieldset className={styles.card}>
+      <fieldset className={styles.card} id="checklist">
         <legend className={styles.cardTitle}>Daftar cek revisi <small className={styles.optional}>{checks.filter(Boolean).length}/{CHECKS.length}</small></legend>
         <ul className={styles.checklist}>
           {CHECKS.map((c, i) => (
@@ -129,6 +134,7 @@ export default function Step6Revise({ article }: { article: Article }) {
             </li>
           ))}
         </ul>
+        <FieldError>{note}</FieldError>
       </fieldset>
 
       <section aria-label="Pratinjau artikel final">
@@ -146,7 +152,6 @@ export default function Step6Revise({ article }: { article: Article }) {
         </article>
       </section>
 
-      {note && <p className={styles.error} role="alert">{note}</p>}
 
       <div className={styles.finalActions}>
         <button type="button" className={styles.secondaryBtn} onClick={download}>

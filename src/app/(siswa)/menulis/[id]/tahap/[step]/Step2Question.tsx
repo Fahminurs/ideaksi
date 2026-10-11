@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Check, Lightbulb, Plus, X } from "lucide-react";
 import { saveArticle, type Article } from "@/lib/articles";
+import { FieldError, goTo } from "./FieldError";
 import styles from "./tahap.module.css";
 
 const STARTERS = ["Bagaimana", "Mengapa", "Apa dampak", "Seberapa besar"];
@@ -47,11 +48,8 @@ export default function Step2Question({ article }: { article: Article }) {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (checks.some((c) => c.required && !c.ok)) {
-      // bawa siswa langsung ke kotak yang harus diperbaiki
-      const el = document.getElementById("main-q");
-      el?.scrollIntoView({ behavior: "smooth", block: "center" });
-      el?.focus({ preventScroll: true });
-      return setError("Lengkapi dulu pertanyaan utamamu sampai tanda wajib menyala hijau.");
+      setError("Lengkapi pertanyaanmu sampai semua tanda wajib menyala hijau.");
+      return goTo("main-q"); // bawa siswa langsung ke kotak yang harus diperbaiki
     }
     saveArticle({
       ...article,
@@ -100,6 +98,7 @@ export default function Step2Question({ article }: { article: Article }) {
             </li>
           ))}
         </ul>
+        <FieldError>{error}</FieldError>
       </div>
 
       <div className={styles.card}>
@@ -140,7 +139,6 @@ export default function Step2Question({ article }: { article: Article }) {
         )}
       </div>
 
-      {error && <p className={styles.error} role="alert">{error}</p>}
 
       <div className={styles.footer}>
         <Link href={`/menulis/${article.id}/tahap/1`} className={styles.secondaryBtn}>Sebelumnya</Link>

@@ -8,6 +8,7 @@ import { saveArticle, type Article } from "@/lib/articles";
 import { generateOutline, type Outline } from "@/lib/ai";
 import { stageVars } from "@/lib/stages";
 import { DeaWorking, Summary } from "./AiParts";
+import { FieldError, goTo } from "./FieldError";
 import styles from "./tahap.module.css";
 
 // warna bagian sama dengan anotasi di Contoh artikel
@@ -21,7 +22,8 @@ export default function Step4Outline({ article }: { article: Article }) {
   const router = useRouter();
   const [outline, setOutline] = useState<Outline | undefined>(article.outline);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); // error umum (dekat tombol Dea)
+  const [empty, setEmpty] = useState<keyof Outline | null>(null); // bagian kerangka yang kosong
   const [made, setMade] = useState(0); // berapa kali Dea membuat kerangka di kunjungan ini
 
   const generate = async () => {
@@ -38,8 +40,15 @@ export default function Step4Outline({ article }: { article: Article }) {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!outline) return setError("Buat kerangkanya dulu dengan bantuan Dea.");
-    if (PARTS.some((p) => !outline[p.key].trim())) return setError("Semua bagian kerangka harus terisi.");
+    if (!outline) {
+      setError("Buat kerangkanya dulu dengan bantuan Dea.");
+      return goTo("dea-action");
+    }
+    const blank = PARTS.find((p) => !outline[p.key].trim());
+    if (blank) {
+      setEmpty(blank.key);
+      return goTo(`o-${blank.key}`);
+    }
     saveArticle({
       ...article,
       outline,
@@ -64,11 +73,12 @@ export default function Step4Outline({ article }: { article: Article }) {
       {busy ? (
         <DeaWorking text="Dea sedang menyusun kerangka" />
       ) : (
-        <button type="button" className={outline ? styles.regenBtn : styles.deaBtn} onClick={generate}>
+        <button type="button" id="dea-action" className={outline ? styles.regenBtn : styles.deaBtn} onClick={generate}>
           {outline ? <RefreshCw size={18} aria-hidden /> : <Sparkles size={20} aria-hidden />}
           {outline ? "Buatkan ulang" : "Buatkan kerangka"}
         </button>
       )}
+      <FieldError>{error}</FieldError>
 
       {outline && !busy && (
         <ol className={styles.outline}>
@@ -83,8 +93,9 @@ export default function Step4Outline({ article }: { article: Article }) {
                   className={`${styles.input} ${styles.textarea}`}
                   rows={p.key === "isi" ? 5 : 3}
                   value={outline[p.key]}
-                  onChange={(e) => { setOutline({ ...outline, [p.key]: e.target.value }); setError(""); }}
+                  onChange={(e) => { setOutline({ ...outline, [p.key]: e.target.value }); setEmpty(null); }}
                 />
+                {empty === p.key && <FieldError>Bagian {p.label.toLowerCase()} tidak boleh kosong.</FieldError>}
               </div>
             </li>
           ))}
@@ -95,7 +106,6 @@ export default function Step4Outline({ article }: { article: Article }) {
         <Lightbulb size={16} aria-hidden /> Kerangka itu seperti peta. Urutkan isi dari fakta yang paling penting.
       </p>
 
-      {error && <p className={styles.error} role="alert">{error}</p>}
 
       <div className={styles.footer}>
         <Link href={`/menulis/${article.id}/tahap/3`} className={styles.secondaryBtn}>Sebelumnya</Link>

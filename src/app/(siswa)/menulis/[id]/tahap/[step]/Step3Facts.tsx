@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Check, Lightbulb, Plus, Trash2 } from "lucide-react";
 import { saveArticle, type Article, type Fact } from "@/lib/articles";
+import { FieldError, goTo } from "./FieldError";
 import styles from "./tahap.module.css";
 
 const MIN = 3;
@@ -23,14 +24,15 @@ export default function Step3Facts({ article }: { article: Article }) {
   const [facts, setFacts] = useState<Fact[]>(
     saved.length >= MIN ? saved : [...saved, ...Array(MIN - saved.length).fill({ fact: "", source: "" })],
   );
-  const [error, setError] = useState("");
+  // error per kartu: {fact, source}
+  const [issues, setIssues] = useState<Record<number, { fact?: string; source?: string }>>({});
 
   const done = facts.filter(isComplete).length;
   const subs = article.question?.subs ?? [];
 
   const update = (i: number, patch: Partial<Fact>) => {
     setFacts((list) => list.map((f, k) => (k === i ? { ...f, ...patch } : f)));
-    setError("");
+    setIssues((all) => ({ ...all, [i]: {} }));
   };
 
   const addSource = (i: number, name: string) => {
@@ -41,10 +43,23 @@ export default function Step3Facts({ article }: { article: Article }) {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const filled = facts.filter((f) => !isEmpty(f));
-    if (filled.some((f) => !isComplete(f))) {
-      return setError("Ada kartu yang belum lengkap. Setiap fakta minimal 5 kata dan harus ada sumbernya.");
+    const found: Record<number, { fact?: string; source?: string }> = {};
+    let missing = MIN - filled.length; // kartu kosong yang masih perlu diisi
+    facts.forEach((f, i) => {
+      if (isEmpty(f)) {
+        if (missing-- > 0) found[i] = { fact: `Isi fakta ini. Kamu butuh minimal ${MIN} fakta.` };
+        return;
+      }
+      const issue: { fact?: string; source?: string } = {};
+      if (wordCount(f.fact) < 5) issue.fact = "Fakta minimal 5 kata supaya jelas.";
+      if (f.source.trim().length < 2) issue.source = "Sumber wajib diisi, misalnya: BPS, 2024.";
+      if (issue.fact || issue.source) found[i] = issue;
+    });
+    const first = Object.keys(found).map(Number).sort((a, b) => a - b)[0];
+    if (first !== undefined) {
+      setIssues(found);
+      return goTo(found[first].fact ? `fact-${first}` : `src-${first}`);
     }
-    if (filled.length < MIN) return setError(`Kumpulkan minimal ${MIN} fakta dulu, ya.`);
     saveArticle({
       ...article,
       facts: filled.map((f) => ({ fact: f.fact.trim(), source: f.source.trim() })),
@@ -84,14 +99,19 @@ export default function Step3Facts({ article }: { article: Article }) {
           const opinion = OPINION.test(f.fact);
           const hasYear = YEAR.test(f.source);
           return (
-            <li key={i} className={styles.factCard} data-done={isComplete(f) || undefined}>
+            <li
+              key={i}
+              className={styles.factCard}
+              data-done={isComplete(f) || undefined}
+              data-error={issues[i]?.fact || issues[i]?.source ? true : undefined}
+            >
               <div className={styles.factHead}>
                 <span className={styles.factNum}>Fakta {i + 1}</span>
                 {facts.length > 1 && (
                   <button
                     type="button"
                     className={styles.removeBtn}
-                    onClick={() => setFacts((list) => list.filter((_, k) => k !== i))}
+                    onClick={() => { setFacts((list) => list.filter((_, k) => k !== i)); setIssues({}); }}
                     aria-label={`Hapus fakta ${i + 1}`}
                   >
                     <Trash2 size={18} aria-hidden />
@@ -108,6 +128,7 @@ export default function Step3Facts({ article }: { article: Article }) {
                 onChange={(e) => update(i, { fact: e.target.value })}
                 placeholder={i === 0 ? "Contoh: 73% remaja Indonesia memakai gadget lebih dari 5 jam per hari." : "Ketik fakta di sini"}
               />
+              <FieldError>{issues[i]?.fact}</FieldError>
               {opinion && (
                 <p className={styles.warn}>Kalimat ini terdengar seperti opini. Fakta sebaiknya bisa dibuktikan, bukan pendapat.</p>
               )}
@@ -120,6 +141,7 @@ export default function Step3Facts({ article }: { article: Article }) {
                 onChange={(e) => update(i, { source: e.target.value })}
                 placeholder="Contoh: Kementerian Kesehatan, 2024"
               />
+              <FieldError>{issues[i]?.source}</FieldError>
               <div className={styles.sourceRow}>
                 <div className={styles.sourceChips} role="group" aria-label={`Isi cepat sumber fakta ${i + 1}`}>
                   {SOURCES.map((s) => (
@@ -141,7 +163,6 @@ export default function Step3Facts({ article }: { article: Article }) {
         <Lightbulb size={16} aria-hidden /> Sebut sumbernya di dalam kalimat nanti, misalnya &ldquo;Menurut BPS (2024), ...&rdquo;. Tidak perlu daftar pustaka.
       </p>
 
-      {error && <p className={styles.error} role="alert">{error}</p>}
 
       <div className={styles.footer}>
         <Link href={`/menulis/${article.id}/tahap/2`} className={styles.secondaryBtn}>Sebelumnya</Link>

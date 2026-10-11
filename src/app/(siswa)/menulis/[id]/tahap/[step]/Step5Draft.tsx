@@ -8,6 +8,7 @@ import { saveArticle, type Article } from "@/lib/articles";
 import { countWords, generateDraft, partOf, readMinutes, type Draft } from "@/lib/ai";
 import { stageVars } from "@/lib/stages";
 import { DeaWorking, Summary } from "./AiParts";
+import { FieldError, goTo } from "./FieldError";
 import styles from "./tahap.module.css";
 
 export default function Step5Draft({ article }: { article: Article }) {
@@ -15,7 +16,8 @@ export default function Step5Draft({ article }: { article: Article }) {
   const [draft, setDraft] = useState<Draft | undefined>(article.draft);
   const [variant, setVariant] = useState(0);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); // error umum (dekat tombol Dea)
+  const [titleError, setTitleError] = useState(false);
   const [made, setMade] = useState(0); // berapa kali Dea membuat draft di kunjungan ini
 
   const generate = async () => {
@@ -34,8 +36,14 @@ export default function Step5Draft({ article }: { article: Article }) {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!draft) return setError("Minta Dea membuat draft dulu.");
-    if (!draft.title.trim()) return setError("Judul tidak boleh kosong.");
+    if (!draft) {
+      setError("Minta Dea membuat draft dulu.");
+      return goTo("dea-action");
+    }
+    if (!draft.title.trim()) {
+      setTitleError(true);
+      return goTo("title");
+    }
     const changed = article.draft?.body !== draft.body || article.draft?.title !== draft.title;
     saveArticle({
       ...article,
@@ -65,11 +73,12 @@ export default function Step5Draft({ article }: { article: Article }) {
       {busy ? (
         <DeaWorking text="Dea sedang menulis draft" />
       ) : (
-        <button type="button" className={draft ? styles.regenBtn : styles.deaBtn} onClick={generate}>
+        <button type="button" id="dea-action" className={draft ? styles.regenBtn : styles.deaBtn} onClick={generate}>
           {draft ? <RefreshCw size={18} aria-hidden /> : <Sparkles size={20} aria-hidden />}
           {draft ? "Buatkan ulang" : "Buatkan draft"}
         </button>
       )}
+      <FieldError>{error}</FieldError>
 
       {draft && !busy && (
         <>
@@ -79,8 +88,9 @@ export default function Step5Draft({ article }: { article: Article }) {
               id="title"
               className={styles.titleInput}
               value={draft.title}
-              onChange={(e) => { setDraft({ ...draft, title: e.target.value }); setError(""); }}
+              onChange={(e) => { setDraft({ ...draft, title: e.target.value }); setTitleError(false); }}
             />
+            {titleError && <FieldError>Judul tidak boleh kosong.</FieldError>}
           </div>
 
           <article className={styles.paper} aria-label="Draft artikel">
@@ -102,7 +112,6 @@ export default function Step5Draft({ article }: { article: Article }) {
         </>
       )}
 
-      {error && <p className={styles.error} role="alert">{error}</p>}
 
       <div className={styles.footer}>
         <Link href={`/menulis/${article.id}/tahap/4`} className={styles.secondaryBtn}>Sebelumnya</Link>
