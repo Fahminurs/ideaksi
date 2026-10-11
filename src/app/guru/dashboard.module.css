@@ -624,3 +624,22 @@
   color: var(--danger-600);
   font-weight: 700;
 }
+
+/* artikel final versi guru juga tampil seperti dokumen */
+.paper {
+  font-family: "Times New Roman", Times, serif;
+}
+
+.paper h3 {
+  font-family: inherit;
+}
+
+.paper p {
+  color: #000;
+  text-indent: 2.2em;
+}
+
+.paper .byline {
+  border-bottom: none;
+  text-indent: 0;
+}

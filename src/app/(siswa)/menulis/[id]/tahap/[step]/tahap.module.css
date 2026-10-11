@@ -1182,7 +1182,6 @@ legend.cardTitle + * {
 
 .reviseArea {
   flex: 1;
-  min-height: 360px;
   line-height: 1.7;
 }
 
@@ -1435,6 +1434,47 @@ legend.cardTitle + * {
   }
 }
 
+/* ===== Isian panjang tanpa kotak: tinggi ikut isi, teks rata kanan-kiri ===== */
+.autoText {
+  width: 100%;
+  display: block;
+  resize: none;
+  overflow: hidden;
+  font: inherit;
+  line-height: 1.75;
+  text-align: justify;
+  hyphens: auto;
+  color: var(--neutral-900);
+}
+
+/* tampil seperti teks biasa; garis putus-putus hanya saat disorot, ring saat diketik */
+.plainEdit {
+  margin: 0 -8px;
+  width: calc(100% + 16px);
+  padding: 6px 8px;
+  border: 1.5px dashed transparent;
+  border-radius: 10px;
+  background: transparent;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.plainEdit:hover {
+  border-color: color-mix(in srgb, var(--stage) 40%, transparent);
+}
+
+.plainEdit:focus {
+  outline: none;
+  border-style: solid;
+  border-color: var(--stage);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.original p {
+  text-align: justify;
+  hyphens: auto;
+}
+
 /* ===== Pesan error di bawah isian ===== */
 .fieldError {
   margin-top: 6px;
@@ -1628,4 +1668,39 @@ legend.cardTitle + * {
   .secondaryBtn {
     min-height: 48px;
   }
+}
+
+/* Pratinjau final = tampilan dokumen (seperti Word): hitam-putih, huruf serif, paragraf menjorok */
+.finalPaper {
+  font-family: "Times New Roman", Times, serif;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.08);
+}
+
+.finalPaper .paperPart {
+  padding-left: 0;
+  border-left: none;
+}
+
+.finalPaper .paperPart + .paperPart {
+  margin-top: 10px;
+}
+
+.finalPaper .paperPart p {
+  color: #000;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  text-indent: 2.2em;
+}
+
+.finalPaper .finalHead {
+  border-bottom: none;
+}
+
+.finalPaper .finalHead h2 {
+  font-family: inherit;
+  color: #000;
+}
+
+.finalPaper .finalHead p {
+  color: #333;
 }

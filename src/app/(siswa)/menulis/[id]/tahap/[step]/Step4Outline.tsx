@@ -8,6 +8,7 @@ import { saveArticle, type Article } from "@/lib/articles";
 import { generateOutline, type Outline } from "@/lib/ai";
 import { stageVars } from "@/lib/stages";
 import { DeaPanel } from "./AiParts";
+import AutoText from "./AutoText";
 import { FieldError, goTo } from "./FieldError";
 import styles from "./tahap.module.css";
 
@@ -85,10 +86,9 @@ export default function Step4Outline({ article }: { article: Article }) {
               <div className={styles.outlineBody}>
                 <label htmlFor={`o-${p.key}`} className={styles.outlineLabel}>{p.label}</label>
                 <span className={styles.outlineHint}>{p.hint}</span>
-                <textarea
+                <AutoText
                   id={`o-${p.key}`}
-                  className={`${styles.input} ${styles.textarea}`}
-                  rows={p.key === "isi" ? 5 : 3}
+                  className={styles.plainEdit}
                   value={outline[p.key]}
                   onChange={(e) => { setOutline({ ...outline, [p.key]: e.target.value }); setEmpty(null); }}
                 />

@@ -8,6 +8,7 @@ import { countWords, partOf, readMinutes } from "@/lib/ai";
 import { useUser } from "@/lib/useUser";
 import { stageVars } from "@/lib/stages";
 import { FieldError, goTo } from "./FieldError";
+import AutoText from "./AutoText";
 import styles from "./tahap.module.css";
 
 const CHECKS = [
@@ -105,8 +106,8 @@ export default function Step6Revise({ article }: { article: Article }) {
         <section className={styles.revise} aria-label="Revisimu">
           <label htmlFor="rev-title" className={styles.paneLabel}>Revisimu <small>bisa diedit</small></label>
           <textarea id="rev-title" className={`${styles.titleInput} ${styles.titleArea}`} rows={2} value={title} onChange={(e) => setTitle(e.target.value)} aria-label="Judul" />
-          <textarea
-            className={`${styles.input} ${styles.textarea} ${styles.reviseArea}`}
+          <AutoText
+            className={`${styles.plainEdit} ${styles.reviseArea}`}
             value={body}
             onChange={(e) => setBody(e.target.value)}
             aria-label="Isi artikel"
