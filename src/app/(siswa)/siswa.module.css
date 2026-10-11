@@ -1,0 +1,484 @@
+/* Layout siswa: mobile = header + bottom nav, desktop (>=768px) = sidebar kiri */
+
+.shell {
+  min-height: 100dvh;
+  background: var(--neutral-50);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: var(--primary-600);
+}
+
+.brand b {
+  color: var(--accent-600);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-100);
+  color: var(--accent-600);
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 800;
+  font-size: 0.875rem;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.iconBtn {
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  transition: background 0.15s ease;
+}
+
+.iconBtn:hover {
+  background: var(--primary-100);
+}
+
+/* Mobile */
+.sidebar {
+  display: none;
+}
+
+.mobileHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.main {
+  padding: 20px 16px calc(104px + env(safe-area-inset-bottom)); /* ruang untuk bottom nav */
+  max-width: 1040px;
+}
+
+/* Bottom nav melayang: ikon + label di setiap tab, kapsul biru meluncur di belakang ikon aktif */
+.bottomNav {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 8px 4px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 12px 32px -12px color-mix(in srgb, var(--brand-shadow) 45%, transparent);
+}
+
+/* Tombol Tanya Dea di tengah bottom nav: bola kuning yang menonjol ke atas bar */
+.aiTab {
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--neutral-700);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.aiOrb {
+  width: 56px;
+  height: 56px;
+  margin-top: -30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-300);
+  color: var(--ink-on-accent);
+  border: 4px solid var(--surface);
+  box-shadow:
+    0 4px 0 color-mix(in srgb, var(--accent-600) 80%, black),
+    0 10px 20px -8px color-mix(in srgb, var(--brand-shadow) 60%, transparent);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.aiTab:active .aiOrb {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--accent-600) 80%, black);
+}
+
+.aiTab[aria-current="page"] .aiOrb {
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--accent-300) 40%, transparent),
+    0 4px 0 color-mix(in srgb, var(--accent-600) 80%, black);
+}
+
+.aiTab .tabLabel {
+  font-weight: 800;
+  color: var(--accent-600);
+}
+
+.tab {
+  min-height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--neutral-500);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tabIcon {
+  position: relative;
+  width: 56px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  transition: transform 0.1s ease, color 0.2s ease;
+}
+
+.tabIcon svg {
+  position: relative;
+}
+
+.tab:active .tabIcon {
+  transform: scale(0.92);
+}
+
+.pill {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--primary-500);
+  box-shadow: 0 3px 0 var(--brand-shadow);
+}
+
+.tabLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tab[aria-current="page"] .tabIcon {
+  color: white;
+}
+
+.tab[aria-current="page"] .tabLabel {
+  color: var(--primary-700);
+  font-weight: 800;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .shell {
+    display: grid;
+    grid-template-columns: 248px minmax(0, 1fr);
+  }
+
+  .mobileHeader,
+  .bottomNav {
+    display: none;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 24px 16px;
+    background: var(--surface);
+    border-right: 1px solid var(--neutral-200);
+  }
+
+  .shell {
+    transition: grid-template-columns 0.2s ease;
+  }
+
+  .shell[data-collapsed] {
+    grid-template-columns: 76px minmax(0, 1fr);
+  }
+
+  .sidebar {
+    overflow: hidden;
+  }
+
+  .sidebarHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 0 20px 8px;
+    border-bottom: 1px solid var(--neutral-200);
+  }
+
+  .shell[data-collapsed] .sidebarHead {
+    flex-direction: column;
+    padding-left: 0;
+  }
+
+
+  /* label tetap ada untuk pembaca layar, hanya disembunyikan secara visual */
+  .shell[data-collapsed] .label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .shell[data-collapsed] .navItem {
+    justify-content: center;
+    padding: 0;
+  }
+
+  .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .main {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 36px 40px 48px;
+  }
+}
+
+.navItem {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--neutral-500);
+  text-align: left;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.navItem:hover {
+  background: var(--neutral-100);
+  color: var(--neutral-900);
+}
+
+/* Menu aktif: tombol biru "timbul" dengan bayangan padat di bawah, senada dengan bottom nav */
+.navItem[aria-current="page"],
+.navItem[aria-current="page"]:hover {
+  margin-bottom: 3px;
+  background: var(--primary-500);
+  color: white;
+  box-shadow: 0 3px 0 var(--brand-shadow);
+}
+
+.collapseBtn {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  color: var(--neutral-500);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.collapseBtn:hover {
+  background: var(--neutral-100);
+  color: var(--neutral-900);
+}
+
+.sidebarFoot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--neutral-200);
+}
+
+
+/* Kaki sidebar: kartu Tanya Dea + kartu profil (tema & keluar jadi ikon) */
+.aiCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid var(--accent-100);
+  border-radius: 14px;
+  background: var(--accent-50);
+  text-align: left;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+
+.aiCard:hover,
+.aiCard[aria-current="page"] {
+  border-color: var(--accent-400);
+}
+
+.aiCard[aria-current="page"] {
+  background: var(--accent-100);
+}
+
+.aiCard:active {
+  transform: scale(0.98);
+}
+
+.aiCardIcon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--accent-300);
+  color: var(--ink-on-accent);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--accent-600) 80%, black);
+}
+
+.aiCardText,
+.userText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.aiCardText strong,
+.userText strong {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.9375rem;
+  color: var(--neutral-900);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aiCardText small,
+.userText small {
+  font-size: 0.75rem;
+  color: var(--neutral-500);
+}
+
+.userCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 14px;
+  background: var(--neutral-50);
+}
+
+.userRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: -4px;
+  padding: 4px;
+  border-radius: 10px;
+  transition: background 0.15s ease;
+}
+
+.userRow:hover {
+  background: var(--primary-50);
+}
+
+.userText {
+  flex: 1;
+}
+
+.avatarSm {
+  width: 36px;
+  height: 36px;
+  font-size: 0.8125rem;
+}
+
+.userActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.miniBtn {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 8px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--neutral-700);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.miniBtn:hover {
+  border-color: var(--primary-300);
+  background: var(--primary-50);
+  color: var(--primary-700);
+}
+
+.miniBtn + .miniBtn:hover {
+  border-color: color-mix(in srgb, var(--danger-600) 40%, transparent);
+  background: var(--danger-50);
+  color: var(--danger-600);
+}
+
+/* Sidebar diciutkan: semuanya bertumpuk sebagai ikon */
+/* hanya ikon, tanpa bingkai kartu, supaya tidak jadi "kotak dalam kotak" */
+.shell[data-collapsed] .aiCard,
+.shell[data-collapsed] .userCard {
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.shell[data-collapsed] .aiCard:hover .aiCardIcon {
+  filter: brightness(1.05);
+}
+
+.shell[data-collapsed] .userActions {
+  grid-template-columns: 1fr;
+}
+
+.shell[data-collapsed] .userRow {
+  justify-content: center;
+}

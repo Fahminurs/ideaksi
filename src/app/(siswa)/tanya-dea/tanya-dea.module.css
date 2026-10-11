@@ -1,0 +1,390 @@
+/* Halaman Tanya Dea: obrolan (kiri) + riwayat (kanan), mengikuti tata letak halaman Materi */
+
+.layout {
+  display: grid;
+  gap: 24px;
+}
+
+.chat {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 61px - 20px - 104px); /* tinggi layar dikurangi header, padding, bottom nav (HP) */
+}
+
+/* Judul + tombol Riwayat menempel di bawah header aplikasi saat di-scroll (HP/tablet) */
+.headBar {
+  position: sticky;
+  top: 61px; /* tinggi header mobile */
+  z-index: 8;
+  margin: -20px -16px 0;
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--neutral-50) 94%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.botAvatar {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--accent-300);
+  color: var(--ink-on-accent);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--accent-600) 80%, black);
+}
+
+.headText {
+  flex: 1;
+  min-width: 0;
+}
+
+.headText h1 {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--neutral-900);
+}
+
+.headText p {
+  margin-top: 2px;
+  font-size: 0.875rem;
+  color: var(--neutral-500);
+}
+
+.historyToggle {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--neutral-700);
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.historyToggle[aria-expanded="true"] {
+  border-color: var(--primary-300);
+  background: var(--primary-50);
+  color: var(--primary-700);
+}
+
+.historyPanel {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  top: calc(100% + 6px);
+  max-height: 60vh;
+  overflow-y: auto;
+  box-shadow: 0 16px 32px -12px color-mix(in srgb, var(--brand-shadow) 45%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+/* Pesan */
+.messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 0;
+}
+
+.bot,
+.me {
+  max-width: min(85%, 640px);
+  padding: 12px 16px;
+  line-height: 1.6;
+}
+
+.bot {
+  align-self: flex-start;
+  border: 1px solid var(--neutral-200);
+  border-radius: 4px 18px 18px 18px;
+  background: var(--surface);
+  color: var(--neutral-900);
+}
+
+.me {
+  align-self: flex-end;
+  border-radius: 18px 4px 18px 18px;
+  background: var(--primary-500);
+  color: white;
+}
+
+.typing {
+  display: flex;
+  gap: 4px;
+}
+
+.typing span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neutral-400);
+  animation: blink 1s infinite ease-in-out;
+}
+
+.typing span:nth-child(2) { animation-delay: 0.15s; }
+.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.3; }
+  40% { opacity: 1; }
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.suggestions button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1.5px solid var(--primary-200);
+  border-radius: 999px;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.suggestions button:hover {
+  border-color: var(--primary-400);
+}
+
+/* Kolom ketik menempel di bawah layar */
+.composer {
+  position: sticky;
+  bottom: calc(96px + env(safe-area-inset-bottom)); /* di atas bottom nav HP */
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 0 12px 28px -14px color-mix(in srgb, var(--brand-shadow) 45%, transparent);
+}
+
+.context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+}
+
+.context p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.context strong {
+  color: var(--neutral-900);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inputRow {
+  display: flex;
+  gap: 8px;
+}
+
+.inputRow input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid var(--neutral-200);
+  border-radius: 999px;
+  background: var(--neutral-50);
+  font: inherit;
+  color: var(--neutral-900);
+}
+
+.inputRow input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+.sendBtn {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--primary-500);
+  color: white;
+  box-shadow: 0 3px 0 var(--brand-shadow);
+}
+
+.sendBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Riwayat */
+.historyAside {
+  display: none;
+}
+
+.asideTitle {
+  margin-bottom: 4px;
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+.newChatBtn {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  background: var(--primary-500);
+  color: white;
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  box-shadow: 0 3px 0 var(--brand-shadow);
+}
+
+.historyList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.historyList button {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: none;
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.historyList button:hover {
+  background: var(--neutral-100);
+}
+
+.historyList button[aria-current] {
+  border-color: var(--primary-300);
+  background: var(--primary-50);
+}
+
+.historyList strong {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  color: var(--neutral-900);
+}
+
+.historyList small {
+  font-size: 0.75rem;
+  color: var(--neutral-500);
+}
+
+.historyEmpty {
+  padding: 8px 4px;
+  font-size: 0.875rem;
+  color: var(--neutral-500);
+}
+
+@media (min-width: 768px) {
+  .chat {
+    min-height: calc(100dvh - 84px);
+  }
+
+  .headText h1 {
+    font-size: 1.5rem;
+  }
+
+  .headBar {
+    top: 0;
+    margin: -36px 0 0;
+    padding: 20px 0 12px;
+  }
+
+  .composer {
+    bottom: 16px;
+  }
+}
+
+/* Desktop lebar: riwayat jadi kolom kanan yang menempel */
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 40px;
+  }
+
+  .historyToggle,
+  .historyPanel {
+    display: none;
+  }
+
+  .headBar {
+    position: static;
+    margin: 0;
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
+    border: none;
+  }
+
+  .historyAside {
+    position: sticky;
+    top: 36px;
+    align-self: start;
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border: 1px solid var(--neutral-200);
+    border-radius: 18px;
+    background: var(--surface);
+  }
+}
+
+/* jawaban Dea bisa berisi daftar bernomor per baris */
+.messages > p {
+  white-space: pre-line;
+}

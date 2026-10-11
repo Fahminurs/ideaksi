@@ -1,0 +1,1327 @@
+/* Halaman tahap menulis: bar tahap, judul tahap, lalu kartu-kartu isian */
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.back {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--primary-700);
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+
+.counter {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--stage);
+  color: var(--stage-ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.stagePage {
+  --stage: var(--primary-500);
+  --stage-soft: var(--primary-50);
+  --stage-ink: white;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+/* Bar 6 tahap: tiap segmen berwarna tahapnya; terkunci = pucat, aktif = penuh + tebal */
+.bar {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+  list-style: none;
+}
+
+.bar li > * {
+  display: block;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--neutral-200);
+}
+
+.bar li[data-state="open"] > * {
+  background: var(--stage);
+  opacity: 0.55;
+}
+
+.bar li[data-state="current"] > * {
+  height: 10px;
+  margin-top: -1px;
+  background: var(--stage);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--stage) 30%, transparent);
+}
+
+.bar a {
+  position: relative;
+}
+
+/* area sentuh lebih besar tanpa menebalkan bar */
+.bar a::after {
+  content: "";
+  position: absolute;
+  inset: -14px 0;
+}
+
+.head {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.head h1 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--neutral-900);
+}
+
+.headIcon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--stage);
+  color: var(--stage-ink);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--stage) 60%, black);
+}
+
+.lead {
+  color: var(--neutral-500);
+}
+
+.form {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+/* legend di fieldset: float supaya duduk di dalam kartu, bukan di garis tepinya */
+legend.cardTitle {
+  float: left;
+  width: 100%;
+}
+
+legend.cardTitle + * {
+  clear: both;
+}
+
+.cardTitle {
+  display: block;
+  margin-bottom: 12px;
+  padding: 0;
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+/* Chip kategori */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  position: relative;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 1.5px solid var(--neutral-200);
+  border-radius: 999px;
+  background: var(--neutral-50);
+  color: var(--neutral-700);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.chip:hover {
+  border-color: color-mix(in srgb, var(--stage) 50%, transparent);
+}
+
+.chip input,
+.option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chip:has(input:checked) {
+  border-color: var(--stage);
+  background: var(--stage);
+  color: var(--stage-ink);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--stage) 60%, black);
+}
+
+.chip:has(input:focus-visible),
+.option:has(input:focus-visible) {
+  outline: 3px solid var(--primary-300);
+  outline-offset: 2px;
+}
+
+/* Saran topik */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  position: relative;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--neutral-200);
+  border-radius: 12px;
+  color: var(--neutral-700);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.option:hover {
+  border-color: color-mix(in srgb, var(--stage) 50%, transparent);
+  background: var(--stage-soft);
+}
+
+.optionMark {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--neutral-300);
+  border-radius: 50%;
+  color: transparent;
+}
+
+.option:has(input:checked) {
+  border-color: var(--stage);
+  background: var(--stage-soft);
+  color: var(--neutral-900);
+}
+
+.option:has(input:checked) .optionMark {
+  border-color: var(--stage);
+  background: var(--stage);
+  color: var(--stage-ink);
+}
+
+/* Input teks */
+.input {
+  width: 100%;
+  min-height: 52px;
+  padding: 12px 16px;
+  border: 1.5px solid var(--neutral-200);
+  border-radius: 12px;
+  background: var(--neutral-50);
+  font: inherit;
+  color: var(--neutral-900);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--neutral-400);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+.hint {
+  margin-top: 6px;
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+}
+
+.error {
+  color: var(--danger-600);
+  font-weight: 600;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chosen {
+  color: var(--neutral-700);
+}
+
+.primaryBtn {
+  min-height: 52px;
+  padding: 0 28px;
+  border: none;
+  border-radius: 12px;
+  background: var(--primary-500);
+  color: white;
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  font-size: 1.0625rem;
+  box-shadow: 0 4px 0 var(--brand-shadow);
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.primaryBtn:hover {
+  background: var(--brand-hover);
+}
+
+.primaryBtn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--brand-shadow);
+}
+
+/* ===== Tahap 2: pertanyaan ===== */
+.topicCard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--stage-1-soft);
+  border: 1px solid color-mix(in srgb, var(--stage-1) 35%, transparent);
+}
+
+.topicCard strong {
+  flex: 1 1 100%;
+  order: 2;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.0625rem;
+  color: var(--neutral-900);
+}
+
+.topicLabel {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--stage-1);
+}
+
+.topicEdit {
+  margin-left: auto;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--neutral-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.starters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.starter {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1.5px dashed color-mix(in srgb, var(--stage) 55%, transparent);
+  border-radius: 999px;
+  background: var(--stage-soft);
+  color: var(--neutral-900);
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.starter:hover {
+  border-style: solid;
+}
+
+.starter:active {
+  transform: scale(0.96);
+}
+
+.textarea {
+  min-height: 96px;
+  padding-top: 14px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* Pengecek pertanyaan: titik menyala hijau saat syarat terpenuhi */
+.checks {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.checks li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--neutral-500);
+  transition: color 0.2s ease;
+}
+
+.checks li small {
+  font-weight: 500;
+  color: var(--neutral-400);
+}
+
+.checkDot {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid var(--neutral-300);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.checks li[data-ok] {
+  color: var(--neutral-900);
+}
+
+.checks li[data-ok] .checkDot {
+  border-color: var(--stage-3);
+  background: var(--stage-3);
+  color: var(--stage-3-ink);
+  transform: scale(1.08);
+}
+
+.optional {
+  margin-left: 6px;
+  font-family: var(--font-body), sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--neutral-500);
+}
+
+.tip {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--stage-soft);
+  font-size: 0.875rem;
+  color: var(--neutral-700);
+}
+
+.tip svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--stage);
+}
+
+.subs {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.subs li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subNum {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--stage);
+  color: var(--stage-ink);
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 800;
+}
+
+.removeBtn {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 10px;
+  background: none;
+  color: var(--neutral-500);
+}
+
+.removeBtn:hover {
+  background: var(--danger-50);
+  color: var(--danger-600);
+}
+
+.addBtn {
+  margin-top: 12px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 1.5px dashed var(--neutral-300);
+  border-radius: 12px;
+  background: none;
+  color: var(--neutral-700);
+  font-weight: 700;
+}
+
+.addBtn:hover {
+  border-color: var(--stage);
+  color: var(--stage);
+}
+
+.secondaryBtn {
+  min-height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  border: 1.5px solid var(--neutral-300);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--neutral-700);
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+}
+
+.secondaryBtn:hover {
+  border-color: var(--primary-300);
+  color: var(--primary-700);
+}
+
+/* Pesan terkunci / tidak ditemukan */
+.notice {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 20px;
+  border: 1.5px dashed var(--neutral-300);
+  border-radius: 16px;
+  text-align: center;
+  color: var(--neutral-500);
+}
+
+.noticeLink {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 18px;
+  border-radius: 10px;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  font-weight: 700;
+}
+
+/* ===== Tahap 3: Fakta & sumber ===== */
+.questionCard {
+  background: var(--stage-2-soft);
+  border-color: color-mix(in srgb, var(--stage-2) 35%, transparent);
+}
+
+.questionCard .topicLabel {
+  color: var(--stage-2);
+}
+
+.subHints {
+  order: 3;
+  flex: 1 1 100%;
+  margin-top: 6px;
+  padding-left: 18px;
+  font-size: 0.875rem;
+  color: var(--neutral-700);
+}
+
+/* meteran fakta: bulatan terisi tiap fakta lengkap */
+.factMeter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--stage-soft);
+  color: var(--neutral-700);
+  font-size: 0.9375rem;
+}
+
+.factMeter ol {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+}
+
+.factMeter li {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px dashed color-mix(in srgb, var(--stage) 55%, transparent);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--stage);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.factMeter li[data-on] {
+  border: 2px solid var(--stage);
+  background: var(--stage);
+  color: var(--stage-ink);
+  transform: scale(1.08);
+}
+
+.factMeter strong {
+  color: var(--stage);
+  font-size: 1.125rem;
+}
+
+.factList {
+  display: grid;
+  gap: 14px;
+  list-style: none;
+}
+
+/* kartu fakta: garis kiri warna tahap, berubah solid saat lengkap */
+.factCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
+  border-radius: 18px;
+  border: 1.5px solid var(--neutral-200);
+  border-left: 6px solid color-mix(in srgb, var(--stage) 40%, transparent);
+  background: var(--surface);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.factCard[data-done] {
+  border-color: color-mix(in srgb, var(--stage) 45%, transparent);
+  border-left-color: var(--stage);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--stage) 25%, transparent);
+}
+
+.factHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+}
+
+.factNum {
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--stage-soft);
+  color: var(--stage);
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+.factCard[data-done] .factNum {
+  background: var(--stage);
+  color: var(--stage-ink);
+}
+
+.fieldLabel {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--neutral-700);
+}
+
+.fieldLabel small {
+  font-weight: 400;
+  color: var(--neutral-500);
+}
+
+.warn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--stage-1-soft);
+  color: var(--neutral-900);
+  font-size: 0.875rem;
+  border-left: 4px solid var(--stage-1);
+}
+
+.sourceRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.factCard .textarea {
+  min-height: 76px;
+}
+
+/* chip sumber hanya muncul saat kartu sedang diisi, supaya tidak ramai */
+.sourceChips {
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.factCard:focus-within .sourceChips {
+  display: flex;
+}
+
+.sourceChips button {
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1.5px solid color-mix(in srgb, var(--stage) 35%, transparent);
+  background: var(--stage-soft);
+  color: var(--stage);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sourceChips button:hover {
+  background: var(--stage);
+  color: var(--stage-ink);
+}
+
+.sourceHint {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--stage-1);
+}
+
+/* ===== Tahap 4-6: ringkasan & Dea ===== */
+.summary {
+  display: grid;
+  gap: 8px;
+}
+
+.summary > div {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 10px;
+  align-items: baseline;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: var(--stage-soft);
+  border-left: 5px solid var(--stage);
+}
+
+.summary dt {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--stage);
+}
+
+.summary dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--neutral-900);
+  overflow-wrap: anywhere;
+}
+
+/* tombol utama AI: kuning khas Dea, timbul */
+.deaBtn {
+  align-self: center;
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 28px;
+  border: none;
+  border-radius: 999px;
+  background: var(--accent-300);
+  color: var(--ink-on-accent);
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--accent-600) 85%, black);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.deaBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 0 color-mix(in srgb, var(--accent-600) 85%, black);
+}
+
+.deaBtn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--accent-600) 85%, black);
+}
+
+.regenBtn {
+  align-self: flex-start;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 1.5px solid color-mix(in srgb, var(--accent-600) 50%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-300) 25%, var(--surface));
+  color: var(--neutral-900);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.deaWorking {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--accent-300) 22%, var(--surface));
+  border: 1.5px dashed color-mix(in srgb, var(--accent-600) 50%, transparent);
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+.deaOrb {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-300);
+  color: var(--ink-on-accent);
+  animation: deaPulse 1.4s ease-in-out infinite;
+}
+
+.deaDots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.deaDots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-600);
+  animation: deaDot 1s ease-in-out infinite;
+}
+
+.deaDots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.deaDots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes deaPulse {
+  50% {
+    transform: scale(1.1) rotate(8deg);
+  }
+}
+
+@keyframes deaDot {
+  50% {
+    transform: translateY(-5px);
+    opacity: 0.5;
+  }
+}
+
+/* ===== Tahap 4: kerangka bernomor dengan garis penghubung ===== */
+.outline {
+  display: grid;
+  list-style: none;
+}
+
+.outline li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 12px;
+  padding-bottom: 18px;
+}
+
+.outline li:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 19px;
+  top: 40px;
+  bottom: 0;
+  width: 3px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--stage) 35%, transparent);
+}
+
+.outlineNum {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--stage);
+  color: var(--stage-ink);
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 800;
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--stage) 60%, black);
+}
+
+.outlineBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 12px 14px 14px;
+  border-radius: 16px;
+  background: var(--stage-soft);
+}
+
+.outlineLabel {
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 800;
+  font-size: 1.0625rem;
+  color: var(--stage);
+}
+
+.outlineHint {
+  margin-bottom: 4px;
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+}
+
+/* ===== Tahap 5: judul & kertas draft ===== */
+.titleCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--stage-soft);
+  border: 1.5px solid color-mix(in srgb, var(--stage) 35%, transparent);
+}
+
+.titleCard label {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--stage);
+}
+
+.titleCard small {
+  font-weight: 400;
+  color: var(--neutral-500);
+}
+
+.titleInput {
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 12px;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--neutral-900);
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.1875rem;
+  font-weight: 800;
+}
+
+.titleInput:focus {
+  outline: none;
+  border-color: var(--stage);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.paper {
+  padding: 20px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--stage) 20%, transparent);
+}
+
+.paperPart {
+  padding-left: 14px;
+  border-left: 4px solid var(--stage);
+}
+
+.paperPart + .paperPart {
+  margin-top: 14px;
+}
+
+.paperPart p {
+  line-height: 1.75;
+  text-align: justify;
+  hyphens: auto;
+  color: var(--neutral-900);
+}
+
+.partTag {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--stage);
+  color: var(--stage-ink);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--neutral-500);
+}
+
+.paper .stats {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--neutral-200);
+}
+
+.stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== Tahap 6: revisi ===== */
+.doneBanner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle, var(--dot-on-blue) 1px, transparent 1.3px) 0 0 / 18px 18px,
+    var(--stage-3);
+  color: white;
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--stage-3) 60%, black);
+}
+
+.doneBanner strong {
+  display: block;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.125rem;
+}
+
+.doneBanner span {
+  font-size: 0.9375rem;
+  opacity: 0.92;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1.5px solid var(--neutral-200);
+}
+
+.tabs button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: 12px;
+  background: none;
+  color: var(--neutral-500);
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tabs button[aria-selected="true"] {
+  background: var(--stage);
+  color: var(--stage-ink);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--stage) 60%, black);
+}
+
+.compare {
+  display: grid;
+  gap: 14px;
+}
+
+.compare[data-tab="revisi"] .original,
+.compare[data-tab="asli"] .revise {
+  display: none;
+}
+
+.original,
+.revise {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 16px;
+  border-radius: 18px;
+}
+
+.original {
+  background: color-mix(in srgb, var(--accent-300) 18%, var(--surface));
+  border: 1.5px dashed color-mix(in srgb, var(--accent-600) 45%, transparent);
+}
+
+.original h3 {
+  font-size: 1.125rem;
+  color: var(--neutral-900);
+}
+
+.original p {
+  line-height: 1.7;
+  color: var(--neutral-700);
+}
+
+.revise {
+  background: var(--stage-soft);
+  border: 1.5px solid color-mix(in srgb, var(--stage) 40%, transparent);
+}
+
+.paneLabel {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--neutral-700);
+}
+
+.paneLabel small {
+  font-weight: 400;
+  color: var(--neutral-500);
+}
+
+.titleArea {
+  resize: none;
+  field-sizing: content;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+}
+
+.reviseArea {
+  flex: 1;
+  min-height: 360px;
+  line-height: 1.7;
+}
+
+.saveBtn {
+  margin-left: auto;
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 999px;
+  background: var(--stage);
+  color: var(--stage-ink);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.saveBtn:disabled {
+  background: var(--stage-soft);
+  color: var(--stage);
+  cursor: default;
+}
+
+.checklist {
+  display: grid;
+  gap: 8px;
+  list-style: none;
+}
+
+.checklist label {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--neutral-200);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.checklist input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.checklist label:has(input:focus-visible) {
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.checklist label[data-on] {
+  background: var(--stage-3-soft);
+  border-color: var(--stage-3);
+  color: var(--neutral-900);
+  font-weight: 600;
+}
+
+.checkBox {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  border: 2px solid var(--neutral-300);
+  color: white;
+}
+
+.checklist label[data-on] .checkBox {
+  border-color: var(--stage-3);
+  background: var(--stage-3);
+}
+
+.previewLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  color: var(--neutral-900);
+}
+
+/* kertas final selalu putih (seperti hasil cetak), juga di mode gelap */
+.finalPaper {
+  padding: 28px 24px;
+  background: #FFFFFF;
+}
+
+.finalPaper .paperPart p {
+  color: #14213D;
+}
+
+.finalHead {
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 3px solid var(--stage);
+  text-align: center;
+}
+
+.finalHead h2 {
+  font-size: 1.375rem;
+  line-height: 1.3;
+  color: #14213D;
+  text-wrap: balance;
+}
+
+.finalHead p {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: #5A6B85;
+}
+
+.finalActions {
+  display: grid;
+  gap: 12px;
+}
+
+.finalActions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.55;
+  cursor: default;
+  transform: none;
+}
+
+@media (min-width: 768px) {
+  .finalActions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .finalPaper {
+    padding: 44px 52px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tabs {
+    display: none;
+  }
+
+  .compare {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .compare[data-tab] .original,
+  .compare[data-tab] .revise {
+    display: flex;
+  }
+}
+
+@media (min-width: 768px) {
+  .head h1 {
+    font-size: 1.875rem;
+  }
+
+  .card {
+    padding: 20px 24px;
+  }
+
+  .footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 767px) {
+  .headIcon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .primaryBtn,
+  .secondaryBtn {
+    min-height: 48px;
+  }
+}

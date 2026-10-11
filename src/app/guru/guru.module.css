@@ -1,0 +1,106 @@
+.shell {
+  min-height: 100dvh;
+  background: var(--neutral-50);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 64px;
+  padding: 0 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brandText {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--primary-600);
+}
+
+.brandText b {
+  color: var(--accent-600);
+}
+
+.roleChip {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--accent-300);
+  color: var(--ink-on-accent);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.teacher {
+  display: none;
+  font-weight: 700;
+  color: var(--neutral-700);
+}
+
+.iconBtn {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--primary-50);
+  color: var(--primary-700);
+}
+
+.logout {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1.5px solid color-mix(in srgb, var(--danger-600) 35%, transparent);
+  background: var(--danger-50);
+  color: var(--danger-600);
+  font-weight: 700;
+}
+
+.logout span {
+  display: none;
+}
+
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding: 0 28px;
+  }
+
+  .teacher,
+  .logout span {
+    display: inline;
+  }
+
+  .main {
+    padding: 28px 28px 64px;
+  }
+}

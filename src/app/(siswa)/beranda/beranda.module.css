@@ -1,0 +1,475 @@
+/* Beranda siswa: satu panel biru (artikel yang sedang ditulis) sebagai fokus, sisanya tenang */
+
+.greet {
+  font-size: 1.5rem;
+  color: var(--neutral-900);
+}
+
+.greetSub {
+  margin-top: 2px;
+  color: var(--neutral-500);
+}
+
+/* Panel artikel berjalan — bahasa visual sama dengan panel login */
+.hero {
+  display: grid;
+  grid-template-areas: "chip" "title" "tracker" "foot";
+  justify-items: start;
+  margin-top: 20px;
+  padding: 22px 20px;
+  border-radius: 20px;
+  color: white;
+  background:
+    radial-gradient(circle, var(--dot-on-blue) 1px, transparent 1.3px) 0 0 / 18px 18px,
+    var(--brand-panel);
+}
+
+.chip {
+  grid-area: chip;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-300);
+  color: var(--ink-on-accent);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.title {
+  grid-area: title;
+  margin-top: 12px;
+  font-size: 1.375rem;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.tracker {
+  grid-area: tracker;
+  justify-self: stretch;
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  list-style: none;
+}
+
+.tracker li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* garis penghubung antar tahap */
+.tracker li + li::before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  right: calc(50% + 18px);
+  width: calc(100% - 36px);
+  height: 2px;
+  background: var(--dot-on-blue);
+}
+
+.tracker li[data-state="done"] + li::before {
+  background: var(--surface);
+}
+
+.dot {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-weight: 800;
+  font-size: 0.875rem;
+  border: 2px solid var(--dot-on-blue);
+  color: var(--text-on-blue-muted);
+}
+
+li[data-state="done"] .dot {
+  background: white;
+  border-color: white;
+  color: var(--brand-ink);
+}
+
+li[data-state="active"] .dot {
+  background: var(--accent-300);
+  border-color: var(--accent-300);
+  color: var(--ink-on-accent);
+  box-shadow: 0 0 0 5px rgba(255, 202, 40, 0.3);
+}
+
+.stepLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-on-blue-muted);
+  text-align: center;
+  white-space: nowrap;
+}
+
+li[data-state="active"] .stepLabel {
+  color: white;
+  font-weight: 800;
+}
+
+li[data-state="locked"] .stepLabel {
+  opacity: 0.6;
+}
+
+.long {
+  display: none;
+}
+
+.heroFoot {
+  grid-area: foot;
+  justify-self: stretch;
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.resume {
+  align-self: stretch;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 22px;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  color: var(--brand-ink);
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 700;
+  box-shadow: 0 4px 0 var(--brand-shadow);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.resume:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--brand-shadow);
+}
+
+.updated {
+  font-size: 0.8125rem;
+  color: var(--text-on-blue-muted);
+}
+
+/* Bawah: belajar + capaian. Tiap item punya warna (biru / hijau / kuning) */
+.columns [data-tone="blue"] {
+  --tone: var(--primary-600);
+  --tone-soft: var(--primary-50);
+  --tone-line: var(--primary-200);
+}
+
+.columns [data-tone="green"] {
+  --tone: var(--success-600);
+  --tone-soft: var(--success-50);
+  --tone-line: color-mix(in srgb, var(--success-500) 35%, transparent);
+}
+
+.columns [data-tone="amber"] {
+  --tone: var(--accent-600);
+  --tone-soft: var(--accent-50);
+  --tone-line: var(--accent-100);
+}
+
+.columns {
+  margin-top: 28px;
+  display: grid;
+  gap: 28px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  color: var(--neutral-900);
+  margin-bottom: 10px;
+}
+
+.learn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 18px;
+  background: var(--surface);
+  list-style: none;
+}
+
+/* sama gaya dengan Capaianmu: ikon timbul berwarna + judul, tanpa bar */
+.learnItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 6px;
+  border-radius: 14px;
+  transition: background 0.15s ease;
+}
+
+.learnItem:hover {
+  background: var(--tone-soft);
+}
+
+.learnItem strong {
+  display: block;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.9375rem;
+  color: var(--neutral-900);
+}
+
+.learnItem small {
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+}
+
+.learnIcon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--tone);
+  color: var(--ink-on-tone);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--tone) 60%, black);
+  transition: transform 0.15s ease;
+}
+
+.learnItem:hover .learnIcon {
+  transform: translateY(-2px);
+}
+
+/* kedua kolom setinggi: kartu mengisi sisa tinggi section */
+.columns > section {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns > section > ul {
+  flex: 1;
+}
+
+/* Capaian: bar tebal timbul (ikon + bar berkilau), warna per jenis */
+.progress {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--neutral-200);
+  border-radius: 18px;
+  background: var(--surface);
+  list-style: none;
+}
+
+.progress li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.progIcon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: var(--tone);
+  color: var(--ink-on-tone);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--tone) 60%, black);
+}
+
+.progMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.progHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--tone);
+}
+
+.progHead strong {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.9375rem;
+  color: var(--neutral-900);
+}
+
+.progTrack {
+  height: 18px;
+  border-radius: 999px;
+  background: var(--tone-soft);
+  box-shadow: inset 0 0 0 1px var(--tone-line);
+  overflow: hidden;
+}
+
+.progFill {
+  position: relative;
+  min-width: 18px;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--tone);
+  box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--tone) 70%, black);
+  animation: progGrow 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* kilau putih di atas bar */
+.progFill::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  right: 8px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.45);
+}
+
+.progMain small {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  color: var(--neutral-500);
+}
+
+@keyframes progGrow {
+  from {
+    width: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .greet {
+    font-size: 1.875rem;
+  }
+
+  .stepLabel {
+    font-size: 0.8125rem;
+  }
+}
+
+/* Desktop lebar: judul + tombol di kiri, daftar tahap vertikal di kanan */
+@media (min-width: 1024px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      "chip tracker"
+      "title tracker"
+      "foot tracker";
+    column-gap: 40px;
+    margin-top: 24px;
+    padding: 32px;
+  }
+
+  .title {
+    font-size: 2.25rem;
+    max-width: 18ch;
+  }
+
+  .heroFoot {
+    align-self: end;
+    justify-self: start;
+    flex-direction: row;
+    gap: 16px;
+  }
+
+  .resume {
+    align-self: auto;
+  }
+
+  .tracker {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: var(--panel-on-blue);
+  }
+
+  .tracker li {
+    flex-direction: row;
+    gap: 12px;
+    height: 44px;
+  }
+
+  .tracker li + li::before {
+    top: -8px;
+    left: 13px;
+    right: auto;
+    width: 2px;
+    height: 16px;
+  }
+
+  .dot {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+  }
+
+  li[data-state="active"] .dot {
+    box-shadow: 0 0 0 4px rgba(255, 202, 40, 0.3);
+  }
+
+  .stepLabel {
+    font-size: 0.9375rem;
+    text-align: left;
+  }
+
+  li[data-state="done"] .stepLabel,
+  li[data-state="active"] .stepLabel {
+    color: white;
+  }
+
+  li[data-state="active"] .stepLabel {
+    font-weight: 800;
+  }
+
+  .short {
+    display: none;
+  }
+
+  .long {
+    display: inline;
+  }
+
+  .columns {
+    grid-template-columns: 1.2fr 1fr;
+  }
+}
+
+/* HP: ikon & bar lebih ringkas */
+@media (max-width: 767px) {
+  .learnIcon,
+  .progIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+  }
+
+  .learnIcon svg,
+  .progIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .progTrack {
+    height: 14px;
+  }
+
+  .progress {
+    gap: 12px;
+    padding: 14px;
+  }
+}
