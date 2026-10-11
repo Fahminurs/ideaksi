@@ -60,6 +60,14 @@ var ACTIONS = {
   "guru.student": guruStudent,
 };
 
+// Konfigurasi: Script Properties dulu; kalau kosong pakai SECRETS dari Secrets.gs
+// (file itu dibuat oleh `node backend/deploy.mjs`, ikut di-upload ke Apps Script, tidak ikut git).
+function config(key) {
+  var v = PropertiesService.getScriptProperties().getProperty(key);
+  if (v) return v;
+  return typeof SECRETS !== "undefined" && SECRETS[key] ? SECRETS[key] : null;
+}
+
 function userError(msg) {
   var e = new Error(msg);
   e.userMessage = msg;
@@ -262,11 +270,9 @@ function logUsage(u, kind, tokens) {
 /** Panggil Gemini. json=true => minta output JSON. Mengembalikan {text, tokens}. */
 function gemini(system, contents, opts) {
   opts = opts || {};
-  var props = PropertiesService.getScriptProperties();
-  var key = props.getProperty("GEMINI_API_KEY");
+  var key = config("GEMINI_API_KEY");
   if (!key) throw userError("Dea belum diaktifkan oleh admin (API key Gemini kosong).");
-  var models = [props.getProperty("GEMINI_MODEL") || "gemini-3.5-flash",
-    props.getProperty("GEMINI_FALLBACK") || "gemini-3.5-flash-lite"];
+  var models = [config("GEMINI_MODEL") || "gemini-3.5-flash", config("GEMINI_FALLBACK") || "gemini-3.5-flash-lite"];
   var body = {
     systemInstruction: { parts: [{ text: system }] },
     contents: contents,
@@ -464,9 +470,8 @@ function guruStudent(r) {
 // ======================================================================
 
 function sb(method, path, body, extraHeaders) {
-  var props = PropertiesService.getScriptProperties();
-  var url = props.getProperty("SUPABASE_URL");
-  var key = props.getProperty("SUPABASE_SERVICE_KEY");
+  var url = config("SUPABASE_URL");
+  var key = config("SUPABASE_SERVICE_KEY");
   if (!url || !key) throw userError("Server belum dikonfigurasi (Supabase).");
   var headers = { apikey: key, Authorization: "Bearer " + key, Prefer: "return=representation" };
   if (extraHeaders) Object.keys(extraHeaders).forEach(function (k) { headers[k] = extraHeaders[k]; });

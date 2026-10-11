@@ -1,13 +1,16 @@
 // Uji backend end-to-end terhadap Supabase & Gemini sungguhan.
 // Jalankan: node backend/test/run.mjs   (butuh backend/.env.test)
+//          API_URL=https://script.google.com/macros/s/.../exec node backend/test/run.mjs
 // Membuat akun uji sementara lalu menghapusnya di akhir.
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { loadEnv, loadGas } from "./gas.mjs";
+import { loadEnv, loadGas, loadRemote } from "./gas.mjs";
 
 const env = loadEnv();
-const api = loadGas(env);
+// API_URL=<web app url> => uji deployment Apps Script sungguhan; tanpa itu => Code.gs dijalankan lokal
+const api = process.env.API_URL ? loadRemote(process.env.API_URL) : loadGas(env);
+console.log(process.env.API_URL ? `Menguji Web App: ${process.env.API_URL}` : "Menguji Code.gs secara lokal");
 const skipAi = process.argv.includes("--no-ai");
 let passed = 0;
 

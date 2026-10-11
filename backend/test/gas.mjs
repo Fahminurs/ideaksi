@@ -51,3 +51,19 @@ export function loadGas(props) {
     call: (body) => JSON.parse(ctx.doPost({ postData: { contents: JSON.stringify(body) } }).content),
   };
 }
+
+// Klien untuk Web App yang sudah dideploy (uji sungguhan lewat internet).
+export function loadRemote(url) {
+  return {
+    call: (body) => {
+      // Apps Script membalas POST dengan redirect 302; tanpa -X, curl -L mengikutinya sebagai GET (perilaku yang benar)
+      const out = execFileSync("curl", ["-s", "-L", url, "-H", "Content-Type: text/plain", "--data-binary", "@-"],
+        { input: JSON.stringify(body), maxBuffer: 20e6 }).toString("utf8");
+      try {
+        return JSON.parse(out);
+      } catch {
+        throw new Error("Respons bukan JSON: " + out.slice(0, 300));
+      }
+    },
+  };
+}
