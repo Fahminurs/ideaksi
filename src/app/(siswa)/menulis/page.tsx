@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, CircleCheck, FileDown, Plus, Trash2 } from "lucide-react";
+import { Check, CircleCheck, FileDown, Plus, Trash2, X } from "lucide-react";
 import { STAGES } from "@/lib/stages";
 import { createArticle, deleteArticle, useArticles, type Article } from "@/lib/articles";
 import { countWords } from "@/lib/ai";
@@ -13,20 +13,36 @@ const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 const titleOf = (a: Article) => a.revision?.title || a.draft?.title || a.topic?.text || "Artikel tanpa judul";
 
-// Hapus permanen setelah konfirmasi (tidak bisa dikembalikan).
+// Tombol hapus: muncul saat kartu di-hover (selalu tampil di layar sentuh).
+// Klik pertama membuka konfirmasi kecil "Hapus?"; tutup otomatis setelah 4 detik.
 function DeleteButton({ a }: { a: Article }) {
+  const [asking, setAsking] = useState(false);
   const title = titleOf(a);
+
+  useEffect(() => {
+    if (!asking) return;
+    const t = setTimeout(() => setAsking(false), 4000);
+    return () => clearTimeout(t);
+  }, [asking]);
+
   return (
-    <button
-      type="button"
-      className={styles.deleteBtn}
-      onClick={() => confirm(`Hapus "${title}"?
-Artikel yang dihapus tidak bisa dikembalikan.`) && deleteArticle(a.id)}
-      aria-label={`Hapus artikel ${title}`}
-      title="Hapus artikel"
-    >
-      <Trash2 size={20} aria-hidden />
-    </button>
+    <div className={styles.deleteWrap} data-asking={asking || undefined}>
+      {asking ? (
+        <div className={styles.confirm} role="group" aria-label={`Hapus ${title}?`}>
+          <span>Hapus?</span>
+          <button type="button" className={styles.confirmYes} onClick={() => deleteArticle(a.id)} aria-label="Ya, hapus">
+            <Check size={16} strokeWidth={3} aria-hidden />
+          </button>
+          <button type="button" className={styles.confirmNo} onClick={() => setAsking(false)} aria-label="Batal">
+            <X size={16} strokeWidth={3} aria-hidden />
+          </button>
+        </div>
+      ) : (
+        <button type="button" className={styles.deleteBtn} onClick={() => setAsking(true)} aria-label={`Hapus artikel ${title}`} title="Hapus">
+          <Trash2 size={19} aria-hidden />
+        </button>
+      )}
+    </div>
   );
 }
 

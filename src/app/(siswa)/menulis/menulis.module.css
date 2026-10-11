@@ -597,22 +597,106 @@ li[data-state="now"] .nodeLabel {
   }
 }
 
-/* tombol hapus artikel */
-.deleteBtn {
-  width: 48px;
-  min-height: 48px;
+/* ===== Hapus artikel: muncul saat kartu di-hover, tutup tempat sampah terangkat ===== */
+.deleteWrap {
   flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 12px;
-  border: 1.5px solid color-mix(in srgb, var(--danger-600) 35%, transparent);
-  background: var(--danger-50);
-  color: var(--danger-600);
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  display: flex;
+  align-items: center;
 }
 
-.deleteBtn:hover {
+.deleteBtn {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px dashed color-mix(in srgb, var(--danger-600) 45%, transparent);
+  background: var(--surface);
+  color: var(--danger-600);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+/* tutup tempat sampah (2 garis pertama ikon) terangkat & miring */
+.deleteBtn svg > :nth-child(-n + 2) {
+  transform-box: fill-box;
+  transform-origin: right bottom;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.deleteBtn:hover,
+.deleteBtn:focus-visible {
+  border-style: solid;
+  border-color: var(--danger-600);
   background: var(--danger-600);
   color: white;
+  transform: rotate(-8deg) scale(1.06);
+}
+
+.deleteBtn:hover svg > :nth-child(-n + 2),
+.deleteBtn:focus-visible svg > :nth-child(-n + 2) {
+  transform: translate(-1px, -3px) rotate(-22deg);
+}
+
+/* konfirmasi kecil berbentuk pil */
+.confirm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 4px 4px 12px;
+  border-radius: 999px;
+  background: var(--danger-600);
+  color: white;
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.875rem;
+  font-weight: 800;
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--danger-600) 60%, black);
+  animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.confirmYes,
+.confirmNo {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.confirmYes {
+  background: white;
+  color: var(--danger-600);
+}
+
+.confirmNo {
+  background: color-mix(in srgb, white 22%, transparent);
+  color: white;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* perangkat dengan mouse: sembunyi sampai kartu di-hover/difokus */
+@media (hover: hover) {
+  .deleteWrap {
+    opacity: 0;
+    transform: scale(0.6) rotate(-30deg);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .draft:hover .deleteWrap,
+  .done:hover .deleteWrap,
+  .deleteWrap:focus-within,
+  .deleteWrap[data-asking] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
 }
