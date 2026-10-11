@@ -204,6 +204,11 @@ button {
   }
 }
 
+/* elemen khusus cetak: tersembunyi di layar */
+.print-only {
+  display: none;
+}
+
 /* Cetak / Simpan PDF: hanya artikel, tampil seperti dokumen Word (hitam-putih, A4) */
 @media print {
   /* sembunyikan semua yang bukan artikel dan bukan pembungkusnya (tanpa halaman kosong) */
@@ -229,6 +234,7 @@ button {
   }
 
   [data-print-area] {
+    display: block !important;
     margin: 0 !important;
     padding: 0 !important;
     border: 0 !important;
