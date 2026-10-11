@@ -6,7 +6,8 @@ import { BookOpen, ChevronDown, CircleCheck, FileText, Heart, LogOut, PenLine, S
 import { useUser } from "@/lib/useUser";
 import { useArticles } from "@/lib/articles";
 import { useQuizBest } from "@/lib/quiz";
-import { logout, updateProfile, type User } from "@/lib/session";
+import { updateProfile, type User } from "@/lib/session";
+import LogoutDialog from "@/components/LogoutDialog";
 import PasswordInput from "../../(auth)/PasswordInput";
 import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./profil.module.css";
@@ -68,6 +69,7 @@ export default function ProfilPage() {
   const done = articles.filter((a) => a.doneAt).length;
   const [editing, setEditing] = useState(false);
   const [saved, setSaved] = useState("");
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const stats = [
     { icon: PenLine, label: "Artikel aktif", value: articles.length - done, tone: "blue" },
@@ -141,11 +143,12 @@ export default function ProfilPage() {
 
       <div className={styles.actions}>
         <ThemeToggle withLabel className={styles.themeBtn} />
-        <button type="button" className={styles.logout} onClick={logout}>
+        <button type="button" className={styles.logout} onClick={() => setLogoutOpen(true)}>
           <LogOut size={20} aria-hidden /> Keluar
         </button>
       </div>
       </div>
+      <LogoutDialog open={logoutOpen} onClose={() => setLogoutOpen(false)} name={user?.name ?? ""} />
     </div>
   );
 }

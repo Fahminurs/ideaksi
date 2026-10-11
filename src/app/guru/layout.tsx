@@ -3,16 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
 import { useUser } from "@/lib/useUser";
-import { endServerSession, logout } from "@/lib/session";
+import { endServerSession } from "@/lib/session";
+import LogoutDialog from "@/components/LogoutDialog";
 import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./guru.module.css";
 
 export default function GuruLayout({ children }: { children: React.ReactNode }) {
   const user = useUser();
   const router = useRouter();
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   useEffect(() => {
     if (user === null) endServerSession().finally(() => router.replace("/masuk"));
@@ -33,12 +35,13 @@ export default function GuruLayout({ children }: { children: React.ReactNode }) 
         <div className={styles.headerActions}>
           <span className={styles.teacher}>{name}</span>
           <ThemeToggle className={styles.iconBtn} />
-          <button type="button" className={styles.logout} onClick={logout}>
+          <button type="button" className={styles.logout} onClick={() => setLogoutOpen(true)}>
             <LogOut size={18} aria-hidden /> <span>Keluar</span>
           </button>
         </div>
       </header>
       <main className={styles.main}>{children}</main>
+      <LogoutDialog open={logoutOpen} onClose={() => setLogoutOpen(false)} name={name} />
     </div>
   );
 }

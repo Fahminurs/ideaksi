@@ -9,7 +9,8 @@ import {
   House, PenLine, BookOpen, FileText, CircleHelp, LogOut,
   PanelLeftClose, PanelLeftOpen, Sparkles,
 } from "lucide-react";
-import { endServerSession, logout, rememberPath } from "@/lib/session";
+import { endServerSession, rememberPath } from "@/lib/session";
+import LogoutDialog from "@/components/LogoutDialog";
 import { apiEnabled } from "@/lib/api";
 import { pullAll } from "@/lib/sync";
 import { useUser } from "@/lib/useUser";
@@ -130,6 +131,7 @@ export default function SiswaLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   // ponytail: tidak diingat antar reload; simpan di localStorage kalau diminta
   const [collapsed, setCollapsed] = useState(false);
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   useEffect(() => {
     if (user === null) endServerSession().finally(() => router.replace("/masuk"));
@@ -184,7 +186,7 @@ export default function SiswaLayout({ children }: { children: React.ReactNode })
             </Link>
             <div className={styles.userActions}>
               <ThemeToggle withLabel short className={styles.miniBtn} labelClassName={styles.label} />
-              <button type="button" className={styles.miniBtn} onClick={logout} title={collapsed ? "Keluar" : undefined}>
+              <button type="button" className={styles.miniBtn} onClick={() => setLogoutOpen(true)} title={collapsed ? "Keluar" : undefined}>
                 <LogOut size={16} aria-hidden /> <span className={styles.label}>Keluar</span>
               </button>
             </div>
@@ -213,6 +215,7 @@ export default function SiswaLayout({ children }: { children: React.ReactNode })
       <Suspense fallback={null}>
         <PathMemory enabled={user?.role === "siswa"} />
       </Suspense>
+      <LogoutDialog open={logoutOpen} onClose={() => setLogoutOpen(false)} name={name} />
     </div>
   );
 }

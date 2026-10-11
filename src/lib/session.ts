@@ -1,5 +1,5 @@
 // Akun & sesi. Mode API: backend Apps Script + Supabase. Mode lokal (tanpa NEXT_PUBLIC_API_URL): akun demo di localStorage.
-import { apiEnabled, call, setOnExpired, setToken } from "./api";
+import { apiEnabled, call, getToken, setOnExpired, setToken } from "./api";
 import { clearLocalData, pullAll } from "./sync";
 
 export type Role = "siswa" | "guru";
@@ -121,10 +121,12 @@ export async function updateProfile(current: User, name: string, username: strin
   return null;
 }
 
-export async function logout() {
+// Keluar langsung: sesi lokal dibuang seketika (layout lalu menghapus cookie server & pindah ke /masuk).
+// Sesi di database dihapus di latar belakang memakai token yang tadi dipegang.
+export function logout() {
+  const token = getToken();
   if (apiEnabled) {
-    // tunggu server menghapus sesi + cookie penjaga rute, supaya proxy tidak mengembalikan ke beranda
-    await call("auth.logout").catch(() => {});
+    if (token) call("auth.logout", { token }).catch(() => {});
     setToken(null);
     clearLocalData(); // data siswa lain tidak boleh tertinggal di perangkat bersama
   }
