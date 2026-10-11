@@ -3,15 +3,32 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, CircleCheck, FileDown, Plus } from "lucide-react";
+import { Check, CircleCheck, FileDown, Plus, Trash2 } from "lucide-react";
 import { STAGES } from "@/lib/stages";
-import { createArticle, useArticles, type Article } from "@/lib/articles";
+import { createArticle, deleteArticle, useArticles, type Article } from "@/lib/articles";
 import { countWords } from "@/lib/ai";
 import styles from "./menulis.module.css";
 
 const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
 const titleOf = (a: Article) => a.revision?.title || a.draft?.title || a.topic?.text || "Artikel tanpa judul";
+
+// Hapus permanen setelah konfirmasi (tidak bisa dikembalikan).
+function DeleteButton({ a }: { a: Article }) {
+  const title = titleOf(a);
+  return (
+    <button
+      type="button"
+      className={styles.deleteBtn}
+      onClick={() => confirm(`Hapus "${title}"?
+Artikel yang dihapus tidak bisa dikembalikan.`) && deleteArticle(a.id)}
+      aria-label={`Hapus artikel ${title}`}
+      title="Hapus artikel"
+    >
+      <Trash2 size={20} aria-hidden />
+    </button>
+  );
+}
 
 export default function MenulisPage() {
   const articles = useArticles();
@@ -89,9 +106,12 @@ export default function MenulisPage() {
                     </p>
                     <p className={styles.meta}>Diedit {formatDate(a.updated)}</p>
                   </div>
-                  <Link href={`/menulis/${a.id}/tahap/${a.stage}`} className={styles.resume}>
-                    Lanjutkan
-                  </Link>
+                  <div className={styles.cardActions}>
+                    <Link href={`/menulis/${a.id}/tahap/${a.stage}`} className={styles.resume}>
+                      Lanjutkan
+                    </Link>
+                    <DeleteButton a={a} />
+                  </div>
                 </div>
 
                 <ol className={styles.path} aria-label="Jalur tahap menulis">
@@ -139,6 +159,7 @@ export default function MenulisPage() {
                 <Link href={`/menulis/${a.id}/tahap/6`} className={styles.pdfBtn}>
                   <FileDown size={18} aria-hidden /> Unduh PDF
                 </Link>
+                <DeleteButton a={a} />
               </div>
             </li>
           ))}

@@ -238,8 +238,14 @@ li[data-state="now"] .nodeLabel {
   color: var(--neutral-900);
 }
 
-.resume {
+.cardActions {
   grid-column: 1 / -1;
+  display: flex;
+  gap: 8px;
+}
+
+.resume {
+  flex: 1;
   min-height: 48px;
   display: flex;
   align-items: center;
@@ -363,8 +369,11 @@ li[data-state="now"] .nodeLabel {
     font-size: 1.375rem;
   }
 
-  .resume {
+  .cardActions {
     grid-column: auto;
+  }
+
+  .resume {
     padding: 0 28px;
   }
 
@@ -586,4 +595,24 @@ li[data-state="now"] .nodeLabel {
     width: 72px;
     height: 72px;
   }
+}
+
+/* tombol hapus artikel */
+.deleteBtn {
+  width: 48px;
+  min-height: 48px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  border: 1.5px solid color-mix(in srgb, var(--danger-600) 35%, transparent);
+  background: var(--danger-50);
+  color: var(--danger-600);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.deleteBtn:hover {
+  background: var(--danger-600);
+  color: white;
 }

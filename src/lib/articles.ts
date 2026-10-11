@@ -82,6 +82,11 @@ export function saveArticle(a: Article) {
   fire("article.save", { article: next });
 }
 
+export function deleteArticle(id: string) {
+  writeAll(readAll().filter((x) => x.id !== id));
+  fire("article.delete", { id });
+}
+
 // undefined = belum terbaca (render server/hidrasi), null = tidak ditemukan.
 export function useArticle(id: string): Article | null | undefined {
   const raw = useSyncExternalStore(subscribe, readRaw, () => undefined);

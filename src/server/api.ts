@@ -173,6 +173,12 @@ async function saveArticle(r: Req) {
   return true;
 }
 
+async function deleteArticle(r: Req) {
+  const u = await requireUser(r, "siswa");
+  await sb("DELETE", `articles?id=eq.${q(String(r.id ?? ""))}&user_id=eq.${u.id}`, undefined, { Prefer: "return=minimal" });
+  return true;
+}
+
 async function saveQuiz(r: Req) {
   const u = await requireUser(r, "siswa");
   const score = Math.round(Number(r.score));
@@ -304,6 +310,7 @@ const ACTIONS: Record<string, (r: Req) => Promise<unknown>> = {
   "profile.update": updateProfile,
   "data.pull": pullData,
   "article.save": saveArticle,
+  "article.delete": deleteArticle,
   "quiz.save": saveQuiz,
   "materi.read": readMateri,
   "chat.send": sendChat,
