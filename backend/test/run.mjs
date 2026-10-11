@@ -1,16 +1,16 @@
 // Uji backend end-to-end terhadap Supabase & Gemini sungguhan.
-// Jalankan: node backend/test/run.mjs   (butuh backend/.env.test)
-//          API_URL=https://script.google.com/macros/s/.../exec node backend/test/run.mjs
+// Jalankan: API_URL=https://ideaksi.vercel.app/api node backend/test/run.mjs   (butuh backend/.env.test)
 // Membuat akun uji sementara lalu menghapusnya di akhir.
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { loadEnv, loadGas, loadRemote } from "./gas.mjs";
+import { loadEnv, loadRemote } from "./gas.mjs";
 
 const env = loadEnv();
-// API_URL=<web app url> => uji deployment Apps Script sungguhan; tanpa itu => Code.gs dijalankan lokal
-const api = process.env.API_URL ? loadRemote(process.env.API_URL) : loadGas(env);
-console.log(process.env.API_URL ? `Menguji Web App: ${process.env.API_URL}` : "Menguji Code.gs secara lokal");
+// API_URL = endpoint /api Next.js (lokal atau Vercel). AI di baliknya memanggil Apps Script.
+const API_URL = process.env.API_URL || "http://localhost:3000/api";
+const api = loadRemote(API_URL);
+console.log(`Menguji API: ${API_URL}`);
 const skipAi = process.argv.includes("--no-ai");
 let passed = 0;
 

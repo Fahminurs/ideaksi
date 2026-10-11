@@ -2,8 +2,8 @@
 // Sekali saja sebelumnya: aktifkan Apps Script API (script.google.com/home/usersettings) lalu `npx @google/clasp login`.
 // Jalankan: node backend/deploy.mjs
 //   1. Membuat project "Ideaksi API" (kalau belum ada)
-//   2. Menyalin Code.gs + appsscript.json + Secrets.gs (dari backend/.env.test) ke backend/dist lalu `clasp push`
-//   3. Membuat / memperbarui deployment Web App (URL tetap sama) dan menulis NEXT_PUBLIC_API_URL ke .env.local
+//   2. Menyalin Code.gs + appsscript.json + Secrets.gs (GEMINI_API_KEY, AI_SECRET dari backend/.env.test) ke backend/dist lalu `clasp push`
+//   3. Membuat / memperbarui deployment Web App (URL tetap sama)
 import { execFileSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { loadEnv } from "./test/gas.mjs";
@@ -25,7 +25,7 @@ mkdirSync(path("dist"), { recursive: true });
 copyFileSync(path("Code.gs"), path("dist/Code.gs"));
 copyFileSync(path("appsscript.json"), path("dist/appsscript.json"));
 const env = loadEnv();
-const keys = ["SUPABASE_URL", "SUPABASE_SERVICE_KEY", "GEMINI_API_KEY", "GEMINI_MODEL", "GEMINI_FALLBACK"];
+const keys = ["GEMINI_API_KEY", "AI_SECRET", "GEMINI_MODEL", "GEMINI_FALLBACK"]; // Apps Script hanya untuk AI
 const secrets = Object.fromEntries(keys.filter((k) => env[k]).map((k) => [k, env[k]]));
 writeFileSync(path("dist/Secrets.gs"),
   "// Dibuat otomatis oleh backend/deploy.mjs. Script Properties (kalau diisi) lebih diutamakan.\n" +
@@ -47,7 +47,4 @@ if (id) {
 }
 
 const url = `https://script.google.com/macros/s/${id}/exec`;
-const envLocal = new URL("../.env.local", dir);
-const prev = existsSync(envLocal) ? readFileSync(envLocal, "utf8").replace(/^NEXT_PUBLIC_API_URL=.*\n?/m, "") : "";
-writeFileSync(envLocal, `${prev}NEXT_PUBLIC_API_URL=${url}\n`);
-console.log("\nWeb App URL:", url, "\n(ditulis ke .env.local)");
+console.log("\nAI Web App URL:", url, "\n(isi sebagai env AI_URL di Vercel dan .env.local)");

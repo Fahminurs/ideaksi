@@ -1,10 +1,6 @@
-// Menjalankan backend/Code.gs di Node dengan tiruan layanan Apps Script (UrlFetchApp, Utilities, dll).
-// UrlFetchApp di Apps Script bersifat sinkron, jadi di sini memakai curl lewat execFileSync.
-// Kunci dibaca dari backend/.env.test (tidak ikut git), format KEY=value per baris.
+// Utilitas uji: baca backend/.env.test (tidak ikut git) dan klien HTTP sinkron (curl) ke API.
 import { execFileSync } from "node:child_process";
-import { createHash, randomUUID } from "node:crypto";
 import { readFileSync, existsSync } from "node:fs";
-import vm from "node:vm";
 
 const here = new URL(".", import.meta.url);
 
@@ -17,42 +13,7 @@ export function loadEnv() {
   );
 }
 
-function fetchSync(url, opts = {}) {
-  const args = ["-s", "-S", "-X", (opts.method || "get").toUpperCase(), url, "-w", "\n%{http_code}"];
-  for (const [k, v] of Object.entries(opts.headers || {})) args.push("-H", `${k}: ${v}`);
-  if (opts.contentType) args.push("-H", `Content-Type: ${opts.contentType}`);
-  if (opts.payload !== undefined) args.push("--data-binary", "@-");
-  const out = execFileSync("curl", args, { input: opts.payload ?? "", maxBuffer: 20e6 }).toString("utf8");
-  const i = out.lastIndexOf("\n");
-  const body = out.slice(0, i);
-  const code = Number(out.slice(i + 1));
-  return { getResponseCode: () => code, getContentText: () => body };
-}
-
-export function loadGas(props) {
-  const ctx = {
-    console,
-    UrlFetchApp: { fetch: fetchSync },
-    Utilities: {
-      DigestAlgorithm: { SHA_256: "sha256" },
-      Charset: { UTF_8: "utf8" },
-      computeDigest: (alg, text) => [...createHash(alg).update(text, "utf8").digest()].map((b) => (b > 127 ? b - 256 : b)),
-      getUuid: () => randomUUID(),
-    },
-    PropertiesService: { getScriptProperties: () => ({ getProperty: (k) => props[k] ?? null }) },
-    ContentService: {
-      MimeType: { JSON: "json" },
-      createTextOutput: (content) => ({ content, setMimeType() { return this; } }),
-    },
-  };
-  vm.createContext(ctx);
-  vm.runInContext(readFileSync(new URL("../Code.gs", here), "utf8"), ctx, { filename: "Code.gs" });
-  return {
-    call: (body) => JSON.parse(ctx.doPost({ postData: { contents: JSON.stringify(body) } }).content),
-  };
-}
-
-// Klien untuk Web App yang sudah dideploy (uji sungguhan lewat internet).
+// Klien ke endpoint API (lokal/Vercel/Apps Script).
 export function loadRemote(url) {
   return {
     call: (body) => {

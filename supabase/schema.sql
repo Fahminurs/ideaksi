@@ -1,5 +1,5 @@
 -- Ideaksi: skema database (Supabase / Postgres).
--- Semua akses lewat backend Google Apps Script memakai service role key.
+-- Semua akses lewat backend Vercel (src/server/api.ts) memakai service role key.
 -- RLS dinyalakan tanpa policy => kunci anon/publik tidak bisa membaca apa pun.
 -- Aman dijalankan ulang (idempotent) kecuali bagian seed yang memakai ON CONFLICT.
 
