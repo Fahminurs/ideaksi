@@ -212,6 +212,8 @@ export default function MenulisPage() {
         </ul>
       </section>
       )}
+      {/* elemen nyata (bukan :last-child) supaya tetap benar saat pindah halaman tanpa refresh */}
+      <div className={styles.fabSpace} aria-hidden />
       {printing && <PrintArticle a={printing} author={user?.name ?? "Siswa"} />}
     </>
   );

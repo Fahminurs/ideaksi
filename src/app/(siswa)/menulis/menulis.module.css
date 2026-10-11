@@ -529,8 +529,8 @@ li[data-state="now"] .nodeLabel {
 /* HP: filter satu baris, dan ruang ekstra di bawah supaya kartu terakhir tidak tertutup tombol melayang */
 @media (max-width: 767px) {
   /* ruang kosong di bawah supaya kartu terakhir tidak tertutup tombol "Mulai artikel baru" yang melayang */
-  .section:last-of-type {
-    padding-bottom: 120px;
+  .fabSpace {
+    height: 120px;
   }
 }
 
