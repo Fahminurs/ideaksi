@@ -530,7 +530,7 @@ li[data-state="now"] .nodeLabel {
 @media (max-width: 767px) {
   /* ruang kosong di bawah supaya kartu terakhir tidak tertutup tombol "Mulai artikel baru" yang melayang */
   .fabSpace {
-    height: 120px;
+    height: 72px; /* tinggi tombol melayang (52px) + jarak 20px */
   }
 }
 
