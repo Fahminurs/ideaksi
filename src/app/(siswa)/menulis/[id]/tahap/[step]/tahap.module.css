@@ -726,6 +726,35 @@ legend.cardTitle + * {
   color: var(--stage-ink);
 }
 
+.yearPick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px 6px 12px;
+  border-radius: 999px;
+  background: var(--stage-1-soft);
+  border: 1.5px dashed var(--stage-1);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--stage-1);
+}
+
+.yearPick button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: none;
+  border-radius: 999px;
+  background: var(--stage-1);
+  color: var(--stage-1-ink);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.yearPick button:hover {
+  transform: translateY(-1px);
+}
+
 .sourceHint {
   font-size: 0.8125rem;
   font-weight: 700;

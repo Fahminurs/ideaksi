@@ -12,6 +12,8 @@ const MIN = 3;
 const SOURCES = ["Kemenkes", "BPS", "BMKG", "WHO", "UNICEF", "KLHK"];
 // kata yang biasanya menandai opini, bukan fakta
 const OPINION = /\b(menurut saya|saya rasa|saya pikir|sebaiknya|seharusnya|harus|pasti|paling bagus|paling buruk|sangat bagus|sangat buruk)\b/i;
+const THIS_YEAR = new Date().getFullYear();
+const YEARS = [THIS_YEAR, THIS_YEAR - 1, THIS_YEAR - 2, THIS_YEAR - 3];
 const YEAR = /\b(19|20)\d{2}\b/;
 
 const wordCount = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
@@ -34,6 +36,10 @@ export default function Step3Facts({ article }: { article: Article }) {
     setFacts((list) => list.map((f, k) => (k === i ? { ...f, ...patch } : f)));
     setIssues((all) => ({ ...all, [i]: {} }));
   };
+
+  // tambahkan tahun ke akhir sumber, mis. "Kemenkes," -> "Kemenkes, 2024"
+  const addYear = (i: number, year: number) =>
+    update(i, { source: `${facts[i].source.trim().replace(/,\s*$/, "")}, ${year}` });
 
   const addSource = (i: number, name: string) => {
     const year = facts[i].source.match(YEAR)?.[0];
@@ -107,7 +113,7 @@ export default function Step3Facts({ article }: { article: Article }) {
             >
               <div className={styles.factHead}>
                 <span className={styles.factNum}>Fakta {i + 1}</span>
-                {facts.length > 1 && (
+                {facts.length > MIN && ( // minimal 3 kartu, jadi kartu ke-1..3 tidak bisa dihapus
                   <button
                     type="button"
                     className={styles.removeBtn}
@@ -148,7 +154,14 @@ export default function Step3Facts({ article }: { article: Article }) {
                     <button key={s} type="button" onClick={() => addSource(i, s)}>{s}</button>
                   ))}
                 </div>
-                {f.source.trim() && !hasYear && <span className={styles.sourceHint}>Tambahkan tahunnya</span>}
+                {f.source.trim() && !hasYear && (
+                  <div className={styles.yearPick} role="group" aria-label="Pilih tahun sumber">
+                    <span>Tahunnya?</span>
+                    {YEARS.map((y) => (
+                      <button key={y} type="button" onClick={() => addYear(i, y)}>{y}</button>
+                    ))}
+                  </div>
+                )}
               </div>
             </li>
           );
