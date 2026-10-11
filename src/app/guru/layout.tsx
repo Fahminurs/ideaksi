@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { LogOut } from "lucide-react";
 import { useUser } from "@/lib/useUser";
-import { endServerSession, logout } from "@/lib/session";
+import { endServerSession } from "@/lib/session";
+import LogoutButton from "@/components/LogoutButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./guru.module.css";
 
@@ -33,9 +34,9 @@ export default function GuruLayout({ children }: { children: React.ReactNode }) 
         <div className={styles.headerActions}>
           <span className={styles.teacher}>{name}</span>
           <ThemeToggle className={styles.iconBtn} />
-          <button type="button" className={styles.logout} onClick={logout}>
+          <LogoutButton name={name} className={styles.logout}>
             <LogOut size={18} aria-hidden /> <span>Keluar</span>
-          </button>
+          </LogoutButton>
         </div>
       </header>
       <main className={styles.main}>{children}</main>

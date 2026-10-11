@@ -9,10 +9,11 @@ import {
   House, PenLine, BookOpen, FileText, CircleHelp, LogOut,
   PanelLeftClose, PanelLeftOpen, Sparkles,
 } from "lucide-react";
-import { endServerSession, logout, rememberPath } from "@/lib/session";
+import { endServerSession, rememberPath } from "@/lib/session";
 import { apiEnabled } from "@/lib/api";
 import { pullAll } from "@/lib/sync";
 import { useUser } from "@/lib/useUser";
+import LogoutButton from "@/components/LogoutButton";
 import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./siswa.module.css";
 
@@ -184,9 +185,9 @@ export default function SiswaLayout({ children }: { children: React.ReactNode })
             </Link>
             <div className={styles.userActions}>
               <ThemeToggle withLabel short className={styles.miniBtn} labelClassName={styles.label} />
-              <button type="button" className={styles.miniBtn} onClick={logout} title={collapsed ? "Keluar" : undefined}>
+              <LogoutButton name={name} className={styles.miniBtn} title={collapsed ? "Keluar" : undefined}>
                 <LogOut size={16} aria-hidden /> <span className={styles.label}>Keluar</span>
-              </button>
+              </LogoutButton>
             </div>
           </div>
         </div>

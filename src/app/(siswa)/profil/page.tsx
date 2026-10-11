@@ -6,7 +6,8 @@ import { BookOpen, ChevronDown, CircleCheck, FileText, Heart, LogOut, PenLine, S
 import { useUser } from "@/lib/useUser";
 import { useArticles } from "@/lib/articles";
 import { useQuizBest } from "@/lib/quiz";
-import { logout, updateProfile, type User } from "@/lib/session";
+import LogoutButton from "@/components/LogoutButton";
+import { updateProfile, type User } from "@/lib/session";
 import PasswordInput from "../../(auth)/PasswordInput";
 import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./profil.module.css";
@@ -141,9 +142,9 @@ export default function ProfilPage() {
 
       <div className={styles.actions}>
         <ThemeToggle withLabel className={styles.themeBtn} />
-        <button type="button" className={styles.logout} onClick={logout}>
+        <LogoutButton name={user?.name} className={styles.logout}>
           <LogOut size={20} aria-hidden /> Keluar
-        </button>
+        </LogoutButton>
       </div>
       </div>
     </div>
