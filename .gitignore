@@ -49,3 +49,6 @@ backend/.deployment.json
 
 .vercel
 .env*
+
+# daftar akun siswa (berisi password)
+akun-siswa-VIII-G.csv

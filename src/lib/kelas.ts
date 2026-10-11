@@ -21,7 +21,7 @@ export type Student = {
   };
 };
 
-export const CLASS_NAME = "Kelas VIII";
+export const CLASS_NAME = "Kelas VIII G";
 export const MATERI_TOTAL = 9;
 
 const GADGET_BODY = [

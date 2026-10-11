@@ -12,14 +12,14 @@ const initials = (name: string) => name.split(" ").slice(0, 2).map((w) => w[0]).
 const STATUS_LABEL = { selesai: "Selesai", aktif: "Menulis", belum: "Belum mulai" } as const;
 
 const SORTS: Record<string, { label: string; fn: (a: Student, b: Student) => number }> = {
-  tahap: { label: "Tahap tertinggi", fn: (a, b) => b.stage - a.stage },
   nama: { label: "Nama A–Z", fn: (a, b) => a.name.localeCompare(b.name) },
+  tahap: { label: "Tahap tertinggi", fn: (a, b) => b.stage - a.stage || a.name.localeCompare(b.name) },
   kuis: { label: "Skor kuis", fn: (a, b) => (b.quiz ?? -1) - (a.quiz ?? -1) },
 };
 
 export default function GuruBerandaPage() {
   const [query, setQuery] = useState("");
-  const [sort, setSort] = useState("tahap");
+  const [sort, setSort] = useState("nama");
   const { data, error } = useStudents();
   const STUDENTS = useMemo(() => data ?? [], [data]);
 
