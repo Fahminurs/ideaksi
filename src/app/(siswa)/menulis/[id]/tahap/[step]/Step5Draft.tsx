@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { BookOpenText, Clock, RefreshCw, Sparkles } from "lucide-react";
+import { BookOpenText, Clock } from "lucide-react";
 import { saveArticle, type Article } from "@/lib/articles";
 import { countWords, generateDraft, partOf, readMinutes, type Draft } from "@/lib/ai";
 import { stageVars } from "@/lib/stages";
-import { DeaWorking, Summary } from "./AiParts";
+import { DeaPanel } from "./AiParts";
 import { FieldError, goTo } from "./FieldError";
 import styles from "./tahap.module.css";
 
@@ -60,25 +60,20 @@ export default function Step5Draft({ article }: { article: Article }) {
 
   return (
     <form onSubmit={submit} className={styles.form}>
-      <p className={styles.lead}>Dea menulis judul dan draft lengkap dari kerangkamu. Sumber disebut langsung di dalam kalimat.</p>
-
-      <Summary
+      <DeaPanel
+        lead="Dea menulis judul dan draft lengkap dari kerangkamu. Sumber disebut langsung di dalam kalimat."
         rows={[
           { label: "Topik", value: article.topic?.text ?? "-", stage: 1 },
           { label: "Kerangka", value: article.outline ? "Pendahuluan, isi, penutup" : "Belum ada", stage: 4 },
           { label: "Fakta", value: `${article.facts?.length ?? 0} fakta + sumber`, stage: 3 },
         ]}
+        busy={busy}
+        workingText="Dea sedang menulis draft"
+        label="Buatkan draft"
+        hasResult={Boolean(draft)}
+        onGenerate={generate}
+        error={error}
       />
-
-      {busy ? (
-        <DeaWorking text="Dea sedang menulis draft" />
-      ) : (
-        <button type="button" id="dea-action" className={draft ? styles.regenBtn : styles.deaBtn} onClick={generate}>
-          {draft ? <RefreshCw size={18} aria-hidden /> : <Sparkles size={20} aria-hidden />}
-          {draft ? "Buatkan ulang" : "Buatkan draft"}
-        </button>
-      )}
-      <FieldError>{error}</FieldError>
 
       {draft && !busy && (
         <>

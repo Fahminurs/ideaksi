@@ -1302,6 +1302,126 @@ legend.cardTitle + * {
   transform: none;
 }
 
+/* ===== Kartu pembungkus tahap 4-6 (supaya isi tidak "melayang" di latar halaman) ===== */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--stage) 18%, transparent);
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.0625rem;
+  color: var(--neutral-900);
+}
+
+.panelTitle::before {
+  content: "";
+  width: 10px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--stage);
+}
+
+.panel .lead {
+  margin-top: -8px;
+}
+
+.panel .tip {
+  margin-bottom: 0;
+}
+
+/* Panel "Bahan untuk Dea": kepala kuning bertitik, bahan berupa ubin warna, tombol Dea di kaki */
+.deaPanel {
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--accent-600) 25%, transparent);
+}
+
+.deaPanelHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--accent-600) 30%, transparent) 1px, transparent 1.4px) 0 0 / 16px 16px,
+    color-mix(in srgb, var(--accent-300) 28%, var(--surface));
+  border-bottom: 1.5px dashed color-mix(in srgb, var(--accent-600) 35%, transparent);
+}
+
+.deaPanelHead strong {
+  font-family: var(--font-heading), sans-serif;
+  font-size: 1.0625rem;
+  color: var(--neutral-900);
+}
+
+.deaPanelHead p {
+  margin-top: 2px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--neutral-700);
+}
+
+.deaFace {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: var(--accent-300);
+  color: var(--ink-on-accent);
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--accent-600) 85%, black);
+  transform: rotate(-6deg);
+}
+
+.deaPanel .summary {
+  padding: 16px 18px 0;
+}
+
+.deaPanelFoot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 18px 18px;
+}
+
+.deaPanelFoot .regenBtn {
+  align-self: center;
+}
+
+.deaPanelFoot .deaWorking {
+  align-self: stretch;
+}
+
+.deaPanelFoot .fieldError {
+  align-self: stretch;
+}
+
+@media (min-width: 768px) {
+  .deaPanel .summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .deaPanel .summary > div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    align-content: start;
+    border-left: none;
+    border-top: 5px solid var(--stage);
+  }
+}
+
 /* ===== Pesan error di bawah isian ===== */
 .fieldError {
   margin-top: 6px;

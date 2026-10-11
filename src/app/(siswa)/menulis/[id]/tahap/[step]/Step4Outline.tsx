@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Lightbulb, RefreshCw, Sparkles } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import { saveArticle, type Article } from "@/lib/articles";
 import { generateOutline, type Outline } from "@/lib/ai";
 import { stageVars } from "@/lib/stages";
-import { DeaWorking, Summary } from "./AiParts";
+import { DeaPanel } from "./AiParts";
 import { FieldError, goTo } from "./FieldError";
 import styles from "./tahap.module.css";
 
@@ -60,27 +60,24 @@ export default function Step4Outline({ article }: { article: Article }) {
 
   return (
     <form onSubmit={submit} className={styles.form}>
-      <p className={styles.lead}>Dea menyusun kerangka dari topik, pertanyaan, dan fakta yang sudah kamu isi. Kamu bebas mengubahnya.</p>
-
-      <Summary
+      <DeaPanel
+        lead="Dea menyusun kerangka dari topik, pertanyaan, dan fakta yang sudah kamu isi. Kamu bebas mengubahnya."
         rows={[
           { label: "Topik", value: article.topic?.text ?? "-", stage: 1 },
           { label: "Pertanyaan", value: article.question?.main ?? "-", stage: 2 },
           { label: "Fakta", value: `${article.facts?.length ?? 0} fakta + sumber`, stage: 3 },
         ]}
+        busy={busy}
+        workingText="Dea sedang menyusun kerangka"
+        label="Buatkan kerangka"
+        hasResult={Boolean(outline)}
+        onGenerate={generate}
+        error={error}
       />
 
-      {busy ? (
-        <DeaWorking text="Dea sedang menyusun kerangka" />
-      ) : (
-        <button type="button" id="dea-action" className={outline ? styles.regenBtn : styles.deaBtn} onClick={generate}>
-          {outline ? <RefreshCw size={18} aria-hidden /> : <Sparkles size={20} aria-hidden />}
-          {outline ? "Buatkan ulang" : "Buatkan kerangka"}
-        </button>
-      )}
-      <FieldError>{error}</FieldError>
-
       {outline && !busy && (
+        <section className={styles.panel} aria-labelledby="outline-h">
+        <h2 id="outline-h" className={styles.panelTitle}>Kerangka artikelmu</h2>
         <ol className={styles.outline}>
           {PARTS.map((p, i) => (
             <li key={p.key} style={stageVars(p.stage)}>
@@ -100,11 +97,11 @@ export default function Step4Outline({ article }: { article: Article }) {
             </li>
           ))}
         </ol>
+        <p className={styles.tip}>
+          <Lightbulb size={16} aria-hidden /> Kerangka itu seperti peta. Urutkan isi dari fakta yang paling penting.
+        </p>
+        </section>
       )}
-
-      <p className={styles.tip}>
-        <Lightbulb size={16} aria-hidden /> Kerangka itu seperti peta. Urutkan isi dari fakta yang paling penting.
-      </p>
 
 
       <div className={styles.footer}>

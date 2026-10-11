@@ -84,6 +84,8 @@ export default function Step6Revise({ article }: { article: Article }) {
         </div>
       )}
 
+      <section className={styles.panel} aria-labelledby="rev-h">
+      <h2 id="rev-h" className={styles.panelTitle}>Perbaiki tulisanmu</h2>
       <p className={styles.lead}>Baca ulang draft dari Dea, lalu perbaiki dengan kata-katamu sendiri.</p>
 
       <div className={styles.tabs} role="tablist" aria-label="Pilih tampilan">
@@ -120,6 +122,7 @@ export default function Step6Revise({ article }: { article: Article }) {
           <Save size={16} aria-hidden /> {dirty ? "Simpan revisi" : "Tersimpan"}
         </button>
       </div>
+      </section>
 
       <fieldset className={styles.card} id="checklist">
         <legend className={styles.cardTitle}>Daftar cek revisi <small className={styles.optional}>{checks.filter(Boolean).length}/{CHECKS.length}</small></legend>
@@ -137,8 +140,8 @@ export default function Step6Revise({ article }: { article: Article }) {
         <FieldError>{note}</FieldError>
       </fieldset>
 
-      <section aria-label="Pratinjau artikel final">
-        <span className={styles.previewLabel}>Pratinjau artikel final</span>
+      <section className={styles.panel} aria-label="Pratinjau artikel final">
+        <h2 className={styles.panelTitle}>Pratinjau artikel final</h2>
         <article className={`${styles.paper} ${styles.finalPaper}`} data-print-area>
           <header className={styles.finalHead}>
             <h2>{title || "Tanpa judul"}</h2>
