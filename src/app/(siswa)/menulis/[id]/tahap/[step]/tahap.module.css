@@ -1273,6 +1273,103 @@ legend.cardTitle + * {
   transform: none;
 }
 
+/* ===== Panduan "cara mengisi" tiap tahap ===== */
+.guide {
+  margin-top: 4px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--accent-300) 16%, var(--surface));
+  border: 1.5px dashed color-mix(in srgb, var(--accent-600) 45%, transparent);
+}
+
+.guide summary {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.guide summary::-webkit-details-marker {
+  display: none;
+}
+
+.guideOrb {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-300);
+  color: var(--ink-on-accent);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--accent-600) 80%, black);
+}
+
+.guideTitle {
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 800;
+  color: var(--neutral-900);
+}
+
+.guideChevron {
+  margin-left: auto;
+  color: var(--neutral-500);
+  transition: transform 0.2s ease;
+}
+
+.guide[open] .guideChevron {
+  transform: rotate(180deg);
+}
+
+.guideSteps {
+  display: grid;
+  gap: 8px;
+  margin: 0 14px;
+  padding: 0;
+  list-style: none;
+  counter-reset: g;
+}
+
+.guideSteps li {
+  display: flex;
+  gap: 10px;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--neutral-900);
+  counter-increment: g;
+}
+
+.guideSteps li::before {
+  content: counter(g);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--stage);
+  color: var(--stage-ink);
+  font-family: var(--font-heading), sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 800;
+}
+
+.guideExample {
+  margin: 12px 14px 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface);
+  border-left: 4px solid var(--stage);
+  font-size: 0.875rem;
+  color: var(--neutral-700);
+}
+
+.guideExample strong {
+  color: var(--stage);
+}
+
 @media (min-width: 768px) {
   .finalActions {
     grid-template-columns: 1fr 1fr;

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { ArrowLeft, Lock } from "lucide-react";
 import { STAGES, stageVars } from "@/lib/stages";
 import { useArticle } from "@/lib/articles";
+import StageGuide from "./StageGuide";
 import Step1Topic from "./Step1Topic";
 import Step2Question from "./Step2Question";
 import Step3Facts from "./Step3Facts";
@@ -61,6 +62,8 @@ export default function StepView() {
         <span className={styles.headIcon}><Icon size={24} aria-hidden /></span>
         <h1>{label}</h1>
       </header>
+
+      {step <= article.stage && <StageGuide key={step} step={step} />}
 
       {step > article.stage ? (
         <div className={styles.notice}>

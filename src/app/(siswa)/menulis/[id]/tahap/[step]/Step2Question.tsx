@@ -47,6 +47,10 @@ export default function Step2Question({ article }: { article: Article }) {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (checks.some((c) => c.required && !c.ok)) {
+      // bawa siswa langsung ke kotak yang harus diperbaiki
+      const el = document.getElementById("main-q");
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      el?.focus({ preventScroll: true });
       return setError("Lengkapi dulu pertanyaan utamamu sampai tanda wajib menyala hijau.");
     }
     saveArticle({
