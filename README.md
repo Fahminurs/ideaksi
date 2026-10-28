@@ -2,7 +2,7 @@
 
 Aplikasi belajar menulis **artikel ilmiah populer** untuk siswa kelas VIII SMP: 6 tahap menulis (topik → pertanyaan → fakta & sumber → kerangka → draft → revisi & PDF), materi, contoh artikel beranotasi, kuis, asisten AI **Tanya Dea**, dan dashboard guru.
 
-Konsep oleh **Nur Isna Sabrina** untuk memenuhi Tugas Akhir PPG. Dikembangkan oleh **Fahmi Nursafaat** (developer).
+Dibuat oleh **Fahmi Nursafaat** (developer). Ide dan konsep oleh **Nur Isna Sabrina**, untuk memenuhi Tugas Akhir PPG.
 
 ## Arsitektur (semua gratis)
 
